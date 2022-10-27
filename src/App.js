@@ -1,6 +1,8 @@
 import './App.css';
 import Chart from 'chart.js/auto';
 import { Line } from 'react-chartjs-2';
+import { Container, Row, Col } from 'react-bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 class Option {
 	constructor(flavor, position, strike, optionPrice) {
@@ -74,11 +76,31 @@ let spreads = {
 		new Option(flavors.Call, positions.Short, 100, 5),
 		new Option(flavors.Call, positions.Long, 105, 2),
 	],
+	Straddle: [new Option(flavors.Put, positions.Long, 100, 5), new Option(flavors.Call, positions.Long, 100, 5)],
+	Strangle: [new Option(flavors.Put, positions.Long, 95, 5), new Option(flavors.Call, positions.Long, 105, 2)],
+	Strip: [
+		new Option(flavors.Call, positions.Long, 100, 5),
+		new Option(flavors.Put, positions.Long, 100, 5),
+		new Option(flavors.Put, positions.Long, 100, 5),
+	],
+	Strap: [
+		new Option(flavors.Put, positions.Long, 100, 5),
+		new Option(flavors.Call, positions.Long, 100, 5),
+		new Option(flavors.Call, positions.Long, 100, 5),
+	],
+	'Synthetic Long Forward': [new Option(flavors.Put, positions.Short, 100, 5), new Option(flavors.Call, positions.Long, 100, 5)],
+	'Synthetic Short Forward': [new Option(flavors.Put, positions.Long, 100, 5), new Option(flavors.Call, positions.Short, 100, 5)],
+	'Box Spread': [
+		new Option(flavors.Put, positions.Long, 120, 5),
+		new Option(flavors.Call, positions.Short, 120, 5),
+		new Option(flavors.Put, positions.Short, 100, 5),
+		new Option(flavors.Call, positions.Long, 100, 5),
+	],
 };
 
 let portfolioPayoffDataArray = [];
 
-function createChart(spreadName, spread) {
+function createChartData(spreadName, spread) {
 	let payoffs = portfolioPayoff(spread); // y vals
 
 	return {
@@ -96,17 +118,75 @@ function createChart(spreadName, spread) {
 }
 
 Object.entries(spreads).forEach(([key, value]) => {
-	portfolioPayoffDataArray.push(createChart(key, value));
+	portfolioPayoffDataArray.push([key, createChartData(key, value)]);
 });
 
-const payoffsChart = () => {
+const payoffCharts = () => {
+	let inc = 0;
+
+	const chartOptions = (textName) => {
+		return {
+			plugins: {
+				title: { display: true, text: textName },
+				legend: {
+					display: false,
+				},
+			},
+		};
+	};
+
 	return (
-		<div>
-			<Line data={portfolioPayoffDataArray[0]} options={{ plugins: { title: { display: true, text: 'test' } } }}></Line>
-			<Line data={portfolioPayoffDataArray[1]}></Line>
-			<Line data={portfolioPayoffDataArray[2]}></Line>
-		</div>
+		<Container>
+			<Row className='h-250'>
+				<Col>
+					<Line data={portfolioPayoffDataArray[inc][1]} options={chartOptions(portfolioPayoffDataArray[inc++][0])}></Line>
+				</Col>
+				<Col>
+					<Line data={portfolioPayoffDataArray[inc][1]} options={chartOptions(portfolioPayoffDataArray[inc++][0])}></Line>
+				</Col>
+			</Row>
+
+			<Row className='h-250'>
+				<Col>
+					<Line data={portfolioPayoffDataArray[inc][1]} options={chartOptions(portfolioPayoffDataArray[inc++][0])}></Line>
+				</Col>
+				<Col></Col>
+			</Row>
+
+			<Row className='h-250'>
+				<Col>
+					<Line data={portfolioPayoffDataArray[inc][1]} options={chartOptions(portfolioPayoffDataArray[inc++][0])}></Line>
+				</Col>
+				<Col>
+					<Line data={portfolioPayoffDataArray[inc][1]} options={chartOptions(portfolioPayoffDataArray[inc++][0])}></Line>
+				</Col>
+			</Row>
+
+			<Row className='h-250'>
+				<Col>
+					<Line data={portfolioPayoffDataArray[inc][1]} options={chartOptions(portfolioPayoffDataArray[inc++][0])}></Line>
+				</Col>
+				<Col>
+					<Line data={portfolioPayoffDataArray[inc][1]} options={chartOptions(portfolioPayoffDataArray[inc++][0])}></Line>
+				</Col>
+			</Row>
+			<Row className='h-250'>
+				<Col>
+					<Line data={portfolioPayoffDataArray[inc][1]} options={chartOptions(portfolioPayoffDataArray[inc++][0])}></Line>
+				</Col>
+				<Col>
+					<Line data={portfolioPayoffDataArray[inc][1]} options={chartOptions(portfolioPayoffDataArray[inc++][0])}></Line>
+				</Col>
+			</Row>
+
+			<Row className='h-250'>
+				<Col>
+					<Line data={portfolioPayoffDataArray[inc][1]} options={chartOptions(portfolioPayoffDataArray[inc++][0])}></Line>
+				</Col>
+				<Col></Col>
+			</Row>
+		</Container>
 	);
 };
 
-export default payoffsChart;
+export default payoffCharts;
