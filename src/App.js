@@ -68,6 +68,10 @@ function portfolioPayoff(options) {
 }
 
 let spreads = {
+	'Long Call': [new Option(flavors.Call, positions.Long, 100, 5)],
+	'Long Put': [new Option(flavors.Put, positions.Long, 100, 5)],
+	'Short Call': [new Option(flavors.Call, positions.Short, 100, 5)],
+	'Short Put': [new Option(flavors.Put, positions.Short, 100, 5)],
 	'Bull Spread': [new Option(flavors.Call, positions.Long, 100, 5), new Option(flavors.Call, positions.Short, 105, 2)],
 	'Bear Spread': [new Option(flavors.Put, positions.Long, 100, 5), new Option(flavors.Put, positions.Short, 95, 2)],
 	'Butterfly Spread': [
@@ -75,6 +79,19 @@ let spreads = {
 		new Option(flavors.Call, positions.Short, 100, 5),
 		new Option(flavors.Call, positions.Short, 100, 5),
 		new Option(flavors.Call, positions.Long, 105, 2),
+	],
+	'Ratio Spread': [
+		new Option(flavors.Call, positions.Long, 100, 10),
+		new Option(flavors.Call, positions.Short, 150, 1),
+		new Option(flavors.Call, positions.Short, 150, 1),
+		new Option(flavors.Call, positions.Short, 150, 1),
+		new Option(flavors.Call, positions.Short, 150, 1),
+		new Option(flavors.Call, positions.Short, 150, 1),
+		new Option(flavors.Call, positions.Short, 150, 1),
+		new Option(flavors.Call, positions.Short, 150, 1),
+		new Option(flavors.Call, positions.Short, 150, 1),
+		new Option(flavors.Call, positions.Short, 150, 1),
+		new Option(flavors.Call, positions.Short, 150, 1),
 	],
 	Straddle: [new Option(flavors.Put, positions.Long, 100, 5), new Option(flavors.Call, positions.Long, 100, 5)],
 	Strangle: [new Option(flavors.Put, positions.Long, 95, 5), new Option(flavors.Call, positions.Long, 105, 2)],
@@ -156,7 +173,27 @@ const payoffCharts = () => {
 				<Col>
 					<Line data={portfolioPayoffDataArray[inc][1]} options={chartOptions(portfolioPayoffDataArray[inc++][0])}></Line>
 				</Col>
-				<Col></Col>
+				<Col>
+					<Line data={portfolioPayoffDataArray[inc][1]} options={chartOptions(portfolioPayoffDataArray[inc++][0])}></Line>
+				</Col>
+			</Row>
+
+			<Row className='h-250'>
+				<Col>
+					<Line data={portfolioPayoffDataArray[inc][1]} options={chartOptions(portfolioPayoffDataArray[inc++][0])}></Line>
+				</Col>
+				<Col>
+					<Line data={portfolioPayoffDataArray[inc][1]} options={chartOptions(portfolioPayoffDataArray[inc++][0])}></Line>
+				</Col>
+			</Row>
+
+			<Row className='h-250'>
+				<Col>
+					<Line data={portfolioPayoffDataArray[inc][1]} options={chartOptions(portfolioPayoffDataArray[inc++][0])}></Line>
+				</Col>
+				<Col>
+					<Line data={portfolioPayoffDataArray[inc][1]} options={chartOptions(portfolioPayoffDataArray[inc++][0])}></Line>
+				</Col>
 			</Row>
 
 			<Row className='h-250'>
