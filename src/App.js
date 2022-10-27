@@ -121,20 +121,26 @@ Object.entries(spreads).forEach(([key, value]) => {
 	portfolioPayoffDataArray.push([key, createChartData(key, value)]);
 });
 
+const chartOptions = (textName) => {
+	return {
+		plugins: {
+			title: {
+				display: true,
+				text: textName,
+				font: { size: 30 },
+			},
+			legend: {
+				display: false,
+			},
+			tooltip: {
+				enabled: true,
+			},
+		},
+	};
+};
+
 const payoffCharts = () => {
 	let inc = 0;
-
-	const chartOptions = (textName) => {
-		return {
-			plugins: {
-				title: { display: true, text: textName },
-				legend: {
-					display: false,
-				},
-			},
-		};
-	};
-
 	return (
 		<Container>
 			<Row className='h-250'>
