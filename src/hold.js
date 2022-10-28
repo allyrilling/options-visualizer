@@ -71,24 +71,25 @@ export default function CreateChart() {
 		return pp;
 	}
 
-	//-------------------------------------------------------------------------------
-	// STATE CODE
-	//-------------------------------------------------------------------------------
+	const [message, setMessage] = useState(0);
 
-	const [strikePrice_LC, set_strikePrice_LC] = useState(100);
-	const [optionPrice_LC, set_optionPrice_LC] = useState(10);
-	const [strikePrice_LP, set_strikePrice_LP] = useState(100);
-	const [optionPrice_LP, set_optionPrice_LP] = useState(10);
-	const [strikePrice_SC, set_strikePrice_SC] = useState(100);
-	const [optionPrice_SC, set_optionPrice_SC] = useState(10);
-	const [strikePrice_SP, set_strikePrice_SP] = useState(100);
-	const [optionPrice_SP, set_optionPrice_SP] = useState(10);
+	const handleChange = (event) => {
+		//  Get input value from "event"
+		setMessage(event.target.value);
+	};
+
+	const [message2, setMessage2] = useState(0);
+
+	const handleChange2 = (event) => {
+		//  Get input value from "event"
+		setMessage2(event.target.value);
+	};
 
 	let spreads = {
-		'Long Call': [new Option(flavors.Call, positions.Long, parseFloat(strikePrice_LC), parseFloat(optionPrice_LC))],
-		'Long Put': [new Option(flavors.Put, positions.Long, parseFloat(strikePrice_LP), parseFloat(optionPrice_LP))],
-		'Short Call': [new Option(flavors.Call, positions.Short, parseFloat(strikePrice_SC), parseFloat(optionPrice_SC))],
-		'Short Put': [new Option(flavors.Put, positions.Short, parseFloat(strikePrice_SP), parseFloat(optionPrice_SP))],
+		'Long Call': [new Option(flavors.Call, positions.Long, parseFloat(message), parseFloat(message2))],
+		'Long Put': [new Option(flavors.Put, positions.Long, 100, 5)],
+		'Short Call': [new Option(flavors.Call, positions.Short, 100, 5)],
+		'Short Put': [new Option(flavors.Put, positions.Short, 100, 5)],
 		'Bull Spread': [new Option(flavors.Call, positions.Long, 100, 5), new Option(flavors.Call, positions.Short, 105, 2)],
 		'Bear Spread': [new Option(flavors.Put, positions.Long, 100, 5), new Option(flavors.Put, positions.Short, 95, 2)],
 		'Butterfly Spread': [
@@ -197,77 +198,29 @@ export default function CreateChart() {
 							<Form.Label>Strike Price</Form.Label>
 							<InputGroup>
 								<InputGroup.Text>$</InputGroup.Text>
-								<Form.Control id='strikePrice' placeholder={strikePrice_LC} onChange={(event) => set_strikePrice_LC(event.target.value)} />
+								<Form.Control id='strikePrice' placeholder='0' onChange={handleChange} />
 							</InputGroup>
 						</Col>
 						<Col>
 							<Form.Label>Option Price</Form.Label>
 							<InputGroup>
 								<InputGroup.Text>$</InputGroup.Text>
-								<Form.Control id='optionPrice' placeholder={optionPrice_LC} onChange={(event) => set_optionPrice_LC(event.target.value)} />
+								<Form.Control id='optionPrice' placeholder='0' onChange={handleChange2} />
 							</InputGroup>
 						</Col>
 					</Row>
 				</Col>
-				<Col>
+				{/* <Col>
 					<Line data={portfolioPayoffDataArray[inc][1]} options={chartOptions(portfolioPayoffDataArray[inc++][0])}></Line>
-					<Row>
-						<Col>
-							<Form.Label>Strike Price</Form.Label>
-							<InputGroup>
-								<InputGroup.Text>$</InputGroup.Text>
-								<Form.Control id='strikePrice' placeholder={strikePrice_LP} onChange={(event) => set_strikePrice_LP(event.target.value)} />
-							</InputGroup>
-						</Col>
-						<Col>
-							<Form.Label>Option Price</Form.Label>
-							<InputGroup>
-								<InputGroup.Text>$</InputGroup.Text>
-								<Form.Control id='optionPrice' placeholder={optionPrice_LP} onChange={(event) => set_optionPrice_LP(event.target.value)} />
-							</InputGroup>
-						</Col>
-					</Row>
-				</Col>
+				</Col> */}
 			</Row>
 
-			<Row className='h-250'>
+			{/* <Row className='h-250'>
 				<Col>
 					<Line data={portfolioPayoffDataArray[inc][1]} options={chartOptions(portfolioPayoffDataArray[inc++][0])}></Line>
-					<Row>
-						<Col>
-							<Form.Label>Strike Price</Form.Label>
-							<InputGroup>
-								<InputGroup.Text>$</InputGroup.Text>
-								<Form.Control id='strikePrice' placeholder={strikePrice_SC} onChange={(event) => set_strikePrice_SC(event.target.value)} />
-							</InputGroup>
-						</Col>
-						<Col>
-							<Form.Label>Option Price</Form.Label>
-							<InputGroup>
-								<InputGroup.Text>$</InputGroup.Text>
-								<Form.Control id='optionPrice' placeholder={optionPrice_SC} onChange={(event) => set_optionPrice_SC(event.target.value)} />
-							</InputGroup>
-						</Col>
-					</Row>
 				</Col>
 				<Col>
 					<Line data={portfolioPayoffDataArray[inc][1]} options={chartOptions(portfolioPayoffDataArray[inc++][0])}></Line>
-					<Row>
-						<Col>
-							<Form.Label>Strike Price</Form.Label>
-							<InputGroup>
-								<InputGroup.Text>$</InputGroup.Text>
-								<Form.Control id='strikePrice' placeholder={strikePrice_SP} onChange={(event) => set_strikePrice_SP(event.target.value)} />
-							</InputGroup>
-						</Col>
-						<Col>
-							<Form.Label>Option Price</Form.Label>
-							<InputGroup>
-								<InputGroup.Text>$</InputGroup.Text>
-								<Form.Control id='optionPrice' placeholder={optionPrice_SP} onChange={(event) => set_optionPrice_SP(event.target.value)} />
-							</InputGroup>
-						</Col>
-					</Row>
 				</Col>
 			</Row>
 
@@ -320,7 +273,7 @@ export default function CreateChart() {
 					<Line data={portfolioPayoffDataArray[inc][1]} options={chartOptions(portfolioPayoffDataArray[inc++][0])}></Line>
 				</Col>
 				<Col></Col>
-			</Row>
+			</Row> */}
 		</Container>
 	);
 }
