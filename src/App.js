@@ -134,23 +134,6 @@ export default function CreateChart() {
 
 	let portfolioPayoffDataArray = [];
 
-	// function createChartData(spreadName, spread) {
-	// 	let payoffs = portfolioPayoff(spread); // y vals
-
-	// 	return {
-	// 		labels: spotPrices,
-	// 		datasets: [
-	// 			{
-	// 				label: spreadName,
-	// 				data: payoffs,
-	// 				fill: true,
-	// 				borderColor: 'rgb(75, 192, 192)',
-	// 				tension: 0.1,
-	// 			},
-	// 		],
-	// 	};
-	// }
-
 	function createChartData(spreadName, spread, quantities) {
 		let payoffs;
 		if (quantities == null) {
@@ -217,11 +200,25 @@ export default function CreateChart() {
 	const [strikePrice2, setStrikePrice2] = useState(100);
 	const [optionPrice2, setOptionPrice2] = useState(10);
 
+	const [qty3, setQty3] = useState(0);
+	const [position3, setPosition3] = useState(positions.Long);
+	const [flavor3, setFlavor3] = useState(flavors.Call);
+	const [strikePrice3, setStrikePrice3] = useState(0);
+	const [optionPrice3, setOptionPrice3] = useState(0);
+
+	const [qty4, setQty4] = useState(0);
+	const [position4, setPosition4] = useState(positions.Long);
+	const [flavor4, setFlavor4] = useState(flavors.Call);
+	const [strikePrice4, setStrikePrice4] = useState(0);
+	const [optionPrice4, setOptionPrice4] = useState(0);
+
 	let customSpread = [
 		new Option(flavor1, position1, parseFloat(strikePrice1), parseFloat(optionPrice1)),
 		new Option(flavor2, position2, parseFloat(strikePrice2), parseFloat(optionPrice2)),
+		new Option(flavor3, position3, parseFloat(strikePrice3), parseFloat(optionPrice3)),
+		new Option(flavor4, position4, parseFloat(strikePrice4), parseFloat(optionPrice4)),
 	];
-	let quantities = [qty1, qty2];
+	let quantities = [qty1, qty2, qty3, qty4];
 	let customPortfolioChartData = createChartData('Custom Spread', customSpread, quantities);
 
 	return (
@@ -303,6 +300,82 @@ export default function CreateChart() {
 							<InputGroup>
 								<InputGroup.Text>$</InputGroup.Text>
 								<Form.Control id='optionPrice' placeholder={optionPrice2} onChange={(event) => setOptionPrice2(event.target.value)} />
+							</InputGroup>
+						</Col>
+					</Row>
+
+					<Row>
+						<Col>
+							<Form.Label>Quantitiy</Form.Label>
+							<InputGroup>
+								<InputGroup.Text>#</InputGroup.Text>
+								<Form.Control id='strikePrice' placeholder={qty3} onChange={(event) => setQty3(event.target.value)} />
+							</InputGroup>
+						</Col>
+						<Col>
+							<Form.Label>Position</Form.Label>
+							<Form.Select placeholder={position3} onChange={(event) => setPosition3(event.target.value)}>
+								<option>{positions.Long}</option>
+								<option>{positions.Short}</option>
+							</Form.Select>
+						</Col>
+						<Col>
+							<Form.Label>Flavor</Form.Label>
+							<Form.Select placeholder={flavor3} onChange={(event) => setFlavor3(event.target.value)}>
+								<option>{flavors.Call}</option>
+								<option>{flavors.Put}</option>
+							</Form.Select>
+						</Col>
+						<Col>
+							<Form.Label>Strike Price</Form.Label>
+							<InputGroup>
+								<InputGroup.Text>$</InputGroup.Text>
+								<Form.Control id='strikePrice' placeholder={strikePrice3} onChange={(event) => setStrikePrice3(event.target.value)} />
+							</InputGroup>
+						</Col>
+						<Col>
+							<Form.Label>Option Price</Form.Label>
+							<InputGroup>
+								<InputGroup.Text>$</InputGroup.Text>
+								<Form.Control id='optionPrice' placeholder={optionPrice3} onChange={(event) => setOptionPrice3(event.target.value)} />
+							</InputGroup>
+						</Col>
+					</Row>
+
+					<Row>
+						<Col>
+							<Form.Label>Quantitiy</Form.Label>
+							<InputGroup>
+								<InputGroup.Text>#</InputGroup.Text>
+								<Form.Control id='strikePrice' placeholder={qty4} onChange={(event) => setQty4(event.target.value)} />
+							</InputGroup>
+						</Col>
+						<Col>
+							<Form.Label>Position</Form.Label>
+							<Form.Select placeholder={position4} onChange={(event) => setPosition4(event.target.value)}>
+								<option>{positions.Long}</option>
+								<option>{positions.Short}</option>
+							</Form.Select>
+						</Col>
+						<Col>
+							<Form.Label>Flavor</Form.Label>
+							<Form.Select placeholder={flavor4} onChange={(event) => setFlavor4(event.target.value)}>
+								<option>{flavors.Call}</option>
+								<option>{flavors.Put}</option>
+							</Form.Select>
+						</Col>
+						<Col>
+							<Form.Label>Strike Price</Form.Label>
+							<InputGroup>
+								<InputGroup.Text>$</InputGroup.Text>
+								<Form.Control id='strikePrice' placeholder={strikePrice4} onChange={(event) => setStrikePrice4(event.target.value)} />
+							</InputGroup>
+						</Col>
+						<Col>
+							<Form.Label>Option Price</Form.Label>
+							<InputGroup>
+								<InputGroup.Text>$</InputGroup.Text>
+								<Form.Control id='optionPrice' placeholder={optionPrice4} onChange={(event) => setOptionPrice4(event.target.value)} />
 							</InputGroup>
 						</Col>
 					</Row>
