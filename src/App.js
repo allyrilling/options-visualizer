@@ -155,7 +155,7 @@ export default function CreateChart() {
 					label: spreadName,
 					data: payoffs,
 					fill: true,
-					borderColor: 'rgb(75, 192, 192)',
+					borderColor: 'red',
 					tension: 0.1,
 				},
 			],
@@ -179,6 +179,20 @@ export default function CreateChart() {
 				},
 				tooltip: {
 					enabled: true,
+				},
+			},
+			scales: {
+				y: {
+					title: {
+						display: true,
+						text: 'Payoff',
+					},
+				},
+				x: {
+					title: {
+						display: true,
+						text: 'Spot Price',
+					},
 				},
 			},
 		};
@@ -223,6 +237,8 @@ export default function CreateChart() {
 
 	return (
 		<Container>
+			<p></p>
+			<h1>Bucky's Options</h1>
 			{/* --------------------------------------------------------------------------- 				Custom Spread
 			------------------------------------------------------------------------------- */}
 			<Row className='h-250'>
@@ -381,6 +397,8 @@ export default function CreateChart() {
 					</Row>
 				</Col>
 			</Row>
+			<p></p>
+			<h1>Naked Options</h1>
 			{/* --------------------------------------------------------------------------- 				Static Options
 			------------------------------------------------------------------------------- */}
 			<Row className='h-250'>
@@ -463,6 +481,8 @@ export default function CreateChart() {
 					</Row>
 				</Col>
 			</Row>
+			<p></p>
+			<h1>Spreads</h1>
 			<Row className='h-250'>
 				<Col>
 					<Line data={portfolioPayoffDataArray[inc][1]} options={chartOptions(portfolioPayoffDataArray[inc++][0])}></Line>
