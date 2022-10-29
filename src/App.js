@@ -385,22 +385,8 @@ export default function CreateChart() {
 			------------------------------------------------------------------------------- */}
 			<Row className='h-250'>
 				<Col>
-					<Line data={portfolioPayoffDataArray[0][1]} options={chartOptions(portfolioPayoffDataArray[0][0])}></Line>
+					<Line data={portfolioPayoffDataArray[inc][1]} options={chartOptions(portfolioPayoffDataArray[inc++][0])}></Line>
 					<Row>
-						{/* <Col>
-							<Form.Label>Position</Form.Label>
-							<Form.Select>
-								<option>Long</option>
-								<option>Short</option>
-							</Form.Select>
-						</Col>
-						<Col>
-							<Form.Label>Flavor</Form.Label>
-							<Form.Select>
-								<option>Call</option>
-								<option>Put</option>
-							</Form.Select>
-						</Col> */}
 						<Col>
 							<Form.Label>Strike Price</Form.Label>
 							<InputGroup>
