@@ -72,7 +72,7 @@ export default function CreateChart() {
 	}
 
 	//-------------------------------------------------------------------------------
-	// STATE CODE
+	// PUT CAL STATE CODE
 	//-------------------------------------------------------------------------------
 
 	const [strikePrice_LC, set_strikePrice_LC] = useState(100);
@@ -134,8 +134,36 @@ export default function CreateChart() {
 
 	let portfolioPayoffDataArray = [];
 
-	function createChartData(spreadName, spread) {
-		let payoffs = portfolioPayoff(spread); // y vals
+	// function createChartData(spreadName, spread) {
+	// 	let payoffs = portfolioPayoff(spread); // y vals
+
+	// 	return {
+	// 		labels: spotPrices,
+	// 		datasets: [
+	// 			{
+	// 				label: spreadName,
+	// 				data: payoffs,
+	// 				fill: true,
+	// 				borderColor: 'rgb(75, 192, 192)',
+	// 				tension: 0.1,
+	// 			},
+	// 		],
+	// 	};
+	// }
+
+	function createChartData(spreadName, spread, quantities) {
+		let payoffs;
+		if (quantities == null) {
+			payoffs = portfolioPayoff(spread); // y vals
+		} else {
+			let linearOptions = [];
+			for (let i = 0; i < quantities.length; i++) {
+				for (let j = 0; j < quantities[i]; j++) {
+					linearOptions.push(spread[i]);
+				}
+			}
+			payoffs = portfolioPayoff(linearOptions);
+		}
 
 		return {
 			labels: spotPrices,
@@ -173,11 +201,118 @@ export default function CreateChart() {
 		};
 	};
 
+	//-------------------------------------------------------------------------------
+	// CUSTOM SPREAD STATE CODE
+	//-------------------------------------------------------------------------------
+
+	const [qty1, setQty1] = useState(1);
+	const [position1, setPosition1] = useState(positions.Long);
+	const [flavor1, setFlavor1] = useState(flavors.Call);
+	const [strikePrice1, setStrikePrice1] = useState(100);
+	const [optionPrice1, setOptionPrice1] = useState(10);
+
+	const [qty2, setQty2] = useState(1);
+	const [position2, setPosition2] = useState(positions.Short);
+	const [flavor2, setFlavor2] = useState(flavors.Call);
+	const [strikePrice2, setStrikePrice2] = useState(100);
+	const [optionPrice2, setOptionPrice2] = useState(10);
+
+	let customSpread = [
+		new Option(flavor1, position1, parseFloat(strikePrice1), parseFloat(optionPrice1)),
+		new Option(flavor2, position2, parseFloat(strikePrice2), parseFloat(optionPrice2)),
+	];
+	let quantities = [qty1, qty2];
+	let customPortfolioChartData = createChartData('Custom Spread', customSpread, quantities);
+
 	return (
 		<Container>
+			{/* --------------------------------------------------------------------------- 				Custom Spread
+			------------------------------------------------------------------------------- */}
 			<Row className='h-250'>
 				<Col>
-					<Line data={portfolioPayoffDataArray[inc][1]} options={chartOptions(portfolioPayoffDataArray[inc++][0])}></Line>
+					<Line data={customPortfolioChartData} options={chartOptions('Custom Spread')}></Line>
+					<Row>
+						<Col>
+							<Form.Label>Quantitiy</Form.Label>
+							<InputGroup>
+								<InputGroup.Text>#</InputGroup.Text>
+								<Form.Control id='strikePrice' placeholder={qty1} onChange={(event) => setQty1(event.target.value)} />
+							</InputGroup>
+						</Col>
+						<Col>
+							<Form.Label>Position</Form.Label>
+							<Form.Select placeholder={position1} onChange={(event) => setPosition1(event.target.value)}>
+								<option selected>{positions.Long}</option>
+								<option>{positions.Short}</option>
+							</Form.Select>
+						</Col>
+						<Col>
+							<Form.Label>Flavor</Form.Label>
+							<Form.Select placeholder={flavor1} onChange={(event) => setFlavor1(event.target.value)}>
+								<option selected>{flavors.Call}</option>
+								<option>{flavors.Put}</option>
+							</Form.Select>
+						</Col>
+						<Col>
+							<Form.Label>Strike Price</Form.Label>
+							<InputGroup>
+								<InputGroup.Text>$</InputGroup.Text>
+								<Form.Control id='strikePrice' placeholder={strikePrice1} onChange={(event) => setStrikePrice1(event.target.value)} />
+							</InputGroup>
+						</Col>
+						<Col>
+							<Form.Label>Option Price</Form.Label>
+							<InputGroup>
+								<InputGroup.Text>$</InputGroup.Text>
+								<Form.Control id='optionPrice' placeholder={optionPrice1} onChange={(event) => setOptionPrice1(event.target.value)} />
+							</InputGroup>
+						</Col>
+					</Row>
+
+					<Row>
+						<Col>
+							<Form.Label>Quantitiy</Form.Label>
+							<InputGroup>
+								<InputGroup.Text>#</InputGroup.Text>
+								<Form.Control id='strikePrice' placeholder={qty2} onChange={(event) => setQty2(event.target.value)} />
+							</InputGroup>
+						</Col>
+						<Col>
+							<Form.Label>Position</Form.Label>
+							<Form.Select placeholder={position2} onChange={(event) => setPosition2(event.target.value)}>
+								<option>{positions.Long}</option>
+								<option selected>{positions.Short}</option>
+							</Form.Select>
+						</Col>
+						<Col>
+							<Form.Label>Flavor</Form.Label>
+							<Form.Select placeholder={flavor2} onChange={(event) => setFlavor2(event.target.value)}>
+								<option>{flavors.Call}</option>
+								<option selected>{flavors.Put}</option>
+							</Form.Select>
+						</Col>
+						<Col>
+							<Form.Label>Strike Price</Form.Label>
+							<InputGroup>
+								<InputGroup.Text>$</InputGroup.Text>
+								<Form.Control id='strikePrice' placeholder={strikePrice2} onChange={(event) => setStrikePrice2(event.target.value)} />
+							</InputGroup>
+						</Col>
+						<Col>
+							<Form.Label>Option Price</Form.Label>
+							<InputGroup>
+								<InputGroup.Text>$</InputGroup.Text>
+								<Form.Control id='optionPrice' placeholder={optionPrice2} onChange={(event) => setOptionPrice2(event.target.value)} />
+							</InputGroup>
+						</Col>
+					</Row>
+				</Col>
+			</Row>
+			{/* --------------------------------------------------------------------------- 				Static Options
+			------------------------------------------------------------------------------- */}
+			<Row className='h-250'>
+				<Col>
+					<Line data={portfolioPayoffDataArray[0][1]} options={chartOptions(portfolioPayoffDataArray[0][0])}></Line>
 					<Row>
 						{/* <Col>
 							<Form.Label>Position</Form.Label>
@@ -229,7 +364,6 @@ export default function CreateChart() {
 					</Row>
 				</Col>
 			</Row>
-
 			<Row className='h-250'>
 				<Col>
 					<Line data={portfolioPayoffDataArray[inc][1]} options={chartOptions(portfolioPayoffDataArray[inc++][0])}></Line>
@@ -270,34 +404,6 @@ export default function CreateChart() {
 					</Row>
 				</Col>
 			</Row>
-
-			<Row className='h-250'>
-				<Col>
-					<Line data={portfolioPayoffDataArray[inc][1]} options={chartOptions(portfolioPayoffDataArray[inc++][0])}></Line>
-				</Col>
-				<Col>
-					<Line data={portfolioPayoffDataArray[inc][1]} options={chartOptions(portfolioPayoffDataArray[inc++][0])}></Line>
-				</Col>
-			</Row>
-
-			<Row className='h-250'>
-				<Col>
-					<Line data={portfolioPayoffDataArray[inc][1]} options={chartOptions(portfolioPayoffDataArray[inc++][0])}></Line>
-				</Col>
-				<Col>
-					<Line data={portfolioPayoffDataArray[inc][1]} options={chartOptions(portfolioPayoffDataArray[inc++][0])}></Line>
-				</Col>
-			</Row>
-
-			<Row className='h-250'>
-				<Col>
-					<Line data={portfolioPayoffDataArray[inc][1]} options={chartOptions(portfolioPayoffDataArray[inc++][0])}></Line>
-				</Col>
-				<Col>
-					<Line data={portfolioPayoffDataArray[inc][1]} options={chartOptions(portfolioPayoffDataArray[inc++][0])}></Line>
-				</Col>
-			</Row>
-
 			<Row className='h-250'>
 				<Col>
 					<Line data={portfolioPayoffDataArray[inc][1]} options={chartOptions(portfolioPayoffDataArray[inc++][0])}></Line>
@@ -314,7 +420,30 @@ export default function CreateChart() {
 					<Line data={portfolioPayoffDataArray[inc][1]} options={chartOptions(portfolioPayoffDataArray[inc++][0])}></Line>
 				</Col>
 			</Row>
-
+			<Row className='h-250'>
+				<Col>
+					<Line data={portfolioPayoffDataArray[inc][1]} options={chartOptions(portfolioPayoffDataArray[inc++][0])}></Line>
+				</Col>
+				<Col>
+					<Line data={portfolioPayoffDataArray[inc][1]} options={chartOptions(portfolioPayoffDataArray[inc++][0])}></Line>
+				</Col>
+			</Row>
+			<Row className='h-250'>
+				<Col>
+					<Line data={portfolioPayoffDataArray[inc][1]} options={chartOptions(portfolioPayoffDataArray[inc++][0])}></Line>
+				</Col>
+				<Col>
+					<Line data={portfolioPayoffDataArray[inc][1]} options={chartOptions(portfolioPayoffDataArray[inc++][0])}></Line>
+				</Col>
+			</Row>
+			<Row className='h-250'>
+				<Col>
+					<Line data={portfolioPayoffDataArray[inc][1]} options={chartOptions(portfolioPayoffDataArray[inc++][0])}></Line>
+				</Col>
+				<Col>
+					<Line data={portfolioPayoffDataArray[inc][1]} options={chartOptions(portfolioPayoffDataArray[inc++][0])}></Line>
+				</Col>
+			</Row>
 			<Row className='h-250'>
 				<Col>
 					<Line data={portfolioPayoffDataArray[inc][1]} options={chartOptions(portfolioPayoffDataArray[inc++][0])}></Line>
