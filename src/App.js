@@ -51,20 +51,38 @@ export default function CreateChart() {
 	}
 
 	// x vals
-	let spotPrices = (() => {
+	let spotPrices = (options) => {
 		let list = [];
-		for (let i = 0; i < 200; i++) {
+		let inc = 1;
+		let highestStrike = determineHighestStrike(options);
+		if (highestStrike > 10000) {
+			inc = highestStrike / 100;
+		} else if (highestStrike > 1000) {
+			inc = highestStrike / 10;
+		}
+		for (let i = 0; i < highestStrike * 2 + 1; i += inc) {
 			list.push(i);
 		}
 		return list;
-	})();
+	};
+
+	function determineHighestStrike(options) {
+		let highestStrike = -1;
+		for (let i = 0; i < options.length; i++) {
+			if (options[i].strike > highestStrike) {
+				highestStrike = options[i].strike;
+			}
+		}
+		return highestStrike;
+	}
 
 	function portfolioPayoff(options) {
 		let pp = []; // pp at each spot price
-		for (let s = 0; s < spotPrices.length; s++) {
+		let spots = spotPrices(options);
+		for (let s = 0; s < spots.length; s++) {
 			let ppAtS = 0;
 			for (let o = 0; o < options.length; o++) {
-				ppAtS += netPayoff(options[o], s);
+				ppAtS += netPayoff(options[o], spots[s]);
 			}
 			pp.push(ppAtS);
 		}
@@ -149,7 +167,7 @@ export default function CreateChart() {
 		}
 
 		return {
-			labels: spotPrices,
+			labels: spotPrices(spread),
 			datasets: [
 				{
 					label: spreadName,
@@ -157,6 +175,7 @@ export default function CreateChart() {
 					fill: true,
 					borderColor: 'red',
 					tension: 0.1,
+					// animation: false,
 				},
 			],
 		};
@@ -208,11 +227,11 @@ export default function CreateChart() {
 	const [strikePrice1, setStrikePrice1] = useState(100);
 	const [optionPrice1, setOptionPrice1] = useState(10);
 
-	const [qty2, setQty2] = useState(1);
-	const [position2, setPosition2] = useState(positions.Short);
+	const [qty2, setQty2] = useState(0);
+	const [position2, setPosition2] = useState(positions.Long);
 	const [flavor2, setFlavor2] = useState(flavors.Call);
-	const [strikePrice2, setStrikePrice2] = useState(100);
-	const [optionPrice2, setOptionPrice2] = useState(10);
+	const [strikePrice2, setStrikePrice2] = useState(0);
+	const [optionPrice2, setOptionPrice2] = useState(0);
 
 	const [qty3, setQty3] = useState(0);
 	const [position3, setPosition3] = useState(positions.Long);
@@ -238,13 +257,20 @@ export default function CreateChart() {
 	return (
 		<Container>
 			<p></p>
-			<h1>Bucky's Options</h1>
+			<h1>Options Visualizer</h1>
 			{/* --------------------------------------------------------------------------- 				Custom Spread
 			------------------------------------------------------------------------------- */}
 			<Row className='h-250'>
 				<Col>
 					<Line data={customPortfolioChartData} options={chartOptions('Custom Spread')}></Line>
 					<Row>
+						{/* <Col>
+							<Form.Label className='fw-bold'>{optionName1}</Form.Label>
+							<InputGroup>
+								<Button variant='outline-danger'>{qty1 > 0 ? 'Update' : 'Add'}</Button>
+								<Form.Control placeholder='Option Name' on/>
+							</InputGroup>
+						</Col> */}
 						<Col>
 							<Form.Label>Quantitiy</Form.Label>
 							<InputGroup>
@@ -255,14 +281,14 @@ export default function CreateChart() {
 						<Col>
 							<Form.Label>Position</Form.Label>
 							<Form.Select placeholder={position1} onChange={(event) => setPosition1(event.target.value)}>
-								<option selected>{positions.Long}</option>
+								<option>{positions.Long}</option>
 								<option>{positions.Short}</option>
 							</Form.Select>
 						</Col>
 						<Col>
 							<Form.Label>Flavor</Form.Label>
 							<Form.Select placeholder={flavor1} onChange={(event) => setFlavor1(event.target.value)}>
-								<option selected>{flavors.Call}</option>
+								<option>{flavors.Call}</option>
 								<option>{flavors.Put}</option>
 							</Form.Select>
 						</Col>
@@ -294,14 +320,14 @@ export default function CreateChart() {
 							<Form.Label>Position</Form.Label>
 							<Form.Select placeholder={position2} onChange={(event) => setPosition2(event.target.value)}>
 								<option>{positions.Long}</option>
-								<option selected>{positions.Short}</option>
+								<option>{positions.Short}</option>
 							</Form.Select>
 						</Col>
 						<Col>
 							<Form.Label>Flavor</Form.Label>
 							<Form.Select placeholder={flavor2} onChange={(event) => setFlavor2(event.target.value)}>
 								<option>{flavors.Call}</option>
-								<option selected>{flavors.Put}</option>
+								<option>{flavors.Put}</option>
 							</Form.Select>
 						</Col>
 						<Col>
@@ -396,6 +422,7 @@ export default function CreateChart() {
 						</Col>
 					</Row>
 				</Col>
+				<Form.Text muted>Note: Quantities greater than 10,000 cause significnat slow-downs in graph rendering.</Form.Text>
 			</Row>
 			<p></p>
 			<h1>Naked Options</h1>
