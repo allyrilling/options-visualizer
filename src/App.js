@@ -175,7 +175,6 @@ export default function CreateChart() {
 					fill: true,
 					borderColor: 'red',
 					tension: 0.1,
-					// animation: false,
 				},
 			],
 		};
@@ -555,6 +554,11 @@ export default function CreateChart() {
 					<Line data={portfolioPayoffDataArray[inc][1]} options={chartOptions(portfolioPayoffDataArray[inc++][0])}></Line>
 				</Col>
 				<Col></Col>
+			</Row>
+			<Row>
+				<p class='footer'>
+					Made by <a href='https://allyrilling.com'>Ally Rilling</a>.
+				</p>
 			</Row>
 		</Container>
 	);

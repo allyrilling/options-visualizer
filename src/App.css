@@ -44,3 +44,10 @@ h1 {
   border-radius: 20px;
 }
 
+.footer {
+  text-align: center;
+}
+
+a:link, a:visited {
+  color: red;
+}
