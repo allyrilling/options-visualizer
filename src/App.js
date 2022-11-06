@@ -271,7 +271,7 @@ export default function CreateChart() {
 							</InputGroup>
 						</Col> */}
 						<Col>
-							<Form.Label>Quantitiy</Form.Label>
+							<Form.Label>Quantity</Form.Label>
 							<InputGroup>
 								<InputGroup.Text>#</InputGroup.Text>
 								<Form.Control id='strikePrice' placeholder={qty1} onChange={(event) => setQty1(event.target.value)} />
@@ -309,7 +309,7 @@ export default function CreateChart() {
 
 					<Row>
 						<Col>
-							<Form.Label>Quantitiy</Form.Label>
+							<Form.Label>Quantity</Form.Label>
 							<InputGroup>
 								<InputGroup.Text>#</InputGroup.Text>
 								<Form.Control id='strikePrice' placeholder={qty2} onChange={(event) => setQty2(event.target.value)} />
@@ -347,7 +347,7 @@ export default function CreateChart() {
 
 					<Row>
 						<Col>
-							<Form.Label>Quantitiy</Form.Label>
+							<Form.Label>Quantity</Form.Label>
 							<InputGroup>
 								<InputGroup.Text>#</InputGroup.Text>
 								<Form.Control id='strikePrice' placeholder={qty3} onChange={(event) => setQty3(event.target.value)} />
@@ -385,7 +385,7 @@ export default function CreateChart() {
 
 					<Row>
 						<Col>
-							<Form.Label>Quantitiy</Form.Label>
+							<Form.Label>Quantity</Form.Label>
 							<InputGroup>
 								<InputGroup.Text>#</InputGroup.Text>
 								<Form.Control id='strikePrice' placeholder={qty4} onChange={(event) => setQty4(event.target.value)} />
