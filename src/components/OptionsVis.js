@@ -1,10 +1,10 @@
-import './App.css';
+import '../css/App.css';
 import 'chart.js/auto'; // ADD THIS
 import { Line } from 'react-chartjs-2';
 import { Container, Row, Col, Form, InputGroup } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useState } from 'react';
-import Option from './Option.js';
+import Option from '../logic/Option.js';
 
 export default function CreateChart() {
 	let inc = 0;

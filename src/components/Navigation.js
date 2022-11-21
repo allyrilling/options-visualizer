@@ -1,13 +1,14 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Nav, Navbar, Container } from 'react-bootstrap';
+import '../css/Navigation.css';
 
 function Navigation(props) {
 	const navigate = useNavigate();
 	return (
-		<Navbar collapseOnSelect expand='sm' bg='#242424' variant='dark'>
+		<Navbar collapseOnSelect expand='sm'>
 			<Container>
-				<Navbar.Brand className='align-center' style={{ fontSize: '30px', fontWeight: 'bold' }} onClick={() => navigate('/home')}>
+				<Navbar.Brand className='align-center' style={{ fontSize: '30px', fontWeight: 'bold', color: 'red' }} onClick={() => navigate('/home')}>
 					FinTools
 				</Navbar.Brand>
 				<Navbar.Toggle aria-controls='responsive-navbar-nav' />
@@ -16,8 +17,12 @@ function Navigation(props) {
 						<Nav.Link className='linkHover' onClick={() => navigate('/options-visualizer')}>
 							Options Visualizer
 						</Nav.Link>
-						<Nav.Link className='linkHover'>Binomial Model</Nav.Link>
-						<Nav.Link className='linkHover'>Black-Scholes Model</Nav.Link>
+						<Nav.Link className='linkHover' onClick={() => navigate('/binomial-model')}>
+							Binomial Model
+						</Nav.Link>
+						<Nav.Link className='linkHover' onClick={() => navigate('/black-scholes-model')}>
+							Black-Scholes Model
+						</Nav.Link>
 					</Nav>
 				</Navbar.Collapse>
 			</Container>

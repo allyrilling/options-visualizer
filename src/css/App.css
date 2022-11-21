@@ -1,0 +1,26 @@
+.App {
+  text-align: center;
+}
+
+h1 {
+  text-align: center;
+  border: 5px solid rgba(255, 0, 0, 20%);
+  padding: 10px;
+  border-radius: 20px;
+}
+
+.footer {
+  text-align: center;
+}
+
+a:link.linkHover, a:visited.linkHover {
+  color: red;
+  text-decoration: none;
+  border-radius: 10px;
+}
+
+a:hover.linkHover, a:active.linkHover {
+  background-color: rgba(205, 205, 205, 0.5);
+  border-radius: 10px;
+  text-decoration: none;
+}
