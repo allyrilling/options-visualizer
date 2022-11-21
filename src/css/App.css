@@ -9,6 +9,13 @@ h1 {
   border-radius: 20px;
 }
 
+h2 {
+  text-align: center;
+  border: 5px solid rgba(255, 0, 0, 20%);
+  padding: 10px;
+  border-radius: 20px;
+}
+
 .footer {
   text-align: center;
 }
