@@ -14,7 +14,7 @@ export default function BinModel() {
 
 	return (
 		<Container className='container'>
-			<ButtonGroup aria-label='Basic example'>
+			<ButtonGroup>
 				<Button variant={modelType === modelTypes.single ? 'danger' : 'secondary'} onClick={() => setModelType(modelTypes.single)}>
 					{modelTypes.single}
 				</Button>

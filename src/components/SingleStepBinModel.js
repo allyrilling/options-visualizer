@@ -401,10 +401,14 @@ export default function SingleStepBinModel() {
 				</Col>
 				<Col>
 					<Form.Label>Solver Method</Form.Label>
-					<Form.Select value={solverMethod} onChange={(event) => setSolverMethod(event.target.value)}>
-						<option>{solverMethods.rp}</option>
-						<option>{solverMethods.rnp}</option>
-					</Form.Select>
+					<ButtonGroup>
+						<Button variant={solverMethod === solverMethods.rp ? 'danger' : 'secondary'} onClick={() => setSolverMethod(solverMethods.rp)}>
+							{solverMethods.rp}
+						</Button>
+						<Button variant={solverMethod === solverMethods.rnp ? 'danger' : 'secondary'} onClick={() => setSolverMethod(solverMethods.rnp)}>
+							{solverMethods.rnp}
+						</Button>
+					</ButtonGroup>
 				</Col>
 			</Row>
 			{solverMethod === solverMethods.rp ? (
@@ -572,7 +576,7 @@ export default function SingleStepBinModel() {
 						</Col>
 					</Row>
 				</Row>
-			)}{' '}
+			)}
 		</Container>
 	);
 }
