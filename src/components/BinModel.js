@@ -1,29 +1,30 @@
 import React from 'react';
 import { Col, Container, Row, Form, InputGroup } from 'react-bootstrap';
 import { useState } from 'react';
+import '../css/BinModel.css';
 
 export default function BinModel() {
-	const [spotPrice, setSpotPrice] = useState(100);
-	const [strikePrice, setStrikePrice] = useState(110);
+	const [S, setS] = useState(100);
+	const [K, setK] = useState(110);
 	const [uParam, setuParam] = useState(1.2);
 	const [dParam, setdParam] = useState(0.9);
 	const [R, setR] = useState(1.02);
-	const [upStatePrice, setUpStatePrice] = useState(120);
-	const [downStatePrice, setDownStatePrice] = useState(90);
+	const [Su, setSu] = useState(120);
+	const [Sd, setSd] = useState(90);
 	const solverMethods = {
 		rp: 'Replication Portfolio',
 		rnp: 'Risk-Neutral Pricing',
 	};
 	const [solverMethod, setSolverMethod] = useState(solverMethods.rp);
 
-	const [callUpStatePayoff, setCallUpStatePayoff] = useState(10);
-	const [callDownStatePayoff, setCallDownStatePayoff] = useState(0);
+	const [callXu, setCallXu] = useState(10);
+	const [callXd, setCallXd] = useState(0);
 	const [callDelta, setCallDelta] = useState(0.3333333333333333);
 	const [callBParam, setCallBParam] = useState(-29.411764705882355);
 	const [callPrice, setCallPrice] = useState(3.9215686274509736);
 
-	const [putUpStatePayoff, setPutUpStatePayoff] = useState(0);
-	const [putDownStatePayoff, setPutDownStatePayoff] = useState(20);
+	const [putXu, setPutXu] = useState(0);
+	const [putXd, setPutXd] = useState(20);
 	const [putDelta, setPutDelta] = useState(-0.6666666666666666);
 	const [putBParam, setPutBParam] = useState(78.43137254901961);
 	const [putPrice, setPutPrice] = useState(11.764705882352956);
@@ -65,7 +66,7 @@ export default function BinModel() {
 	}
 
 	return (
-		<Container>
+		<Container className='container'>
 			<h1>General Inputs</h1>
 			<Row>
 				<Col>
@@ -73,24 +74,24 @@ export default function BinModel() {
 					<InputGroup>
 						<InputGroup.Text>$</InputGroup.Text>
 						<Form.Control
-							value={spotPrice}
+							value={S}
 							onChange={(event) => {
 								let newVal = event.target.value;
-								setSpotPrice(newVal);
+								setS(newVal);
 
 								let newUpPrice = newVal * uParam;
-								setUpStatePrice(newUpPrice);
+								setSu(newUpPrice);
 
 								let newDownPrice = newVal * dParam;
-								setDownStatePrice(newDownPrice);
+								setSd(newDownPrice);
 
 								// CALL
 
-								let newCallUpPayoff = calcStatePayoff(newUpPrice, strikePrice, true);
-								setCallUpStatePayoff(newCallUpPayoff);
+								let newCallUpPayoff = calcStatePayoff(newUpPrice, K, true);
+								setCallXu(newCallUpPayoff);
 
-								let newCallDownPayoff = calcStatePayoff(newDownPrice, strikePrice, true);
-								setCallDownStatePayoff(newCallDownPayoff);
+								let newCallDownPayoff = calcStatePayoff(newDownPrice, K, true);
+								setCallXd(newCallDownPayoff);
 
 								let newCallDelta = calcDelta(newCallUpPayoff, newCallDownPayoff, newUpPrice, newDownPrice);
 								setCallDelta(newCallDelta);
@@ -100,11 +101,11 @@ export default function BinModel() {
 
 								// PUT
 
-								let newPutUpPayoff = calcStatePayoff(newUpPrice, strikePrice, false);
-								setPutUpStatePayoff(newPutUpPayoff);
+								let newPutUpPayoff = calcStatePayoff(newUpPrice, K, false);
+								setPutXu(newPutUpPayoff);
 
-								let newPutDownPayoff = calcStatePayoff(newDownPrice, strikePrice, false);
-								setPutDownStatePayoff(newPutDownPayoff);
+								let newPutDownPayoff = calcStatePayoff(newDownPrice, K, false);
+								setPutXd(newPutDownPayoff);
 
 								let newPutDelta = calcDelta(newPutUpPayoff, newPutDownPayoff, newUpPrice, newDownPrice);
 								setPutDelta(newPutDelta);
@@ -126,42 +127,42 @@ export default function BinModel() {
 					<InputGroup>
 						<InputGroup.Text>$</InputGroup.Text>
 						<Form.Control
-							value={strikePrice}
+							value={K}
 							onChange={(event) => {
 								let newVal = event.target.value;
-								setStrikePrice(newVal);
+								setK(newVal);
 
 								// CALL
 
-								let newCallUpPayoff = calcStatePayoff(upStatePrice, newVal, true);
-								setCallUpStatePayoff(newCallUpPayoff);
+								let newCallUpPayoff = calcStatePayoff(Su, newVal, true);
+								setCallXu(newCallUpPayoff);
 
-								let newCallDownPayoff = calcStatePayoff(downStatePrice, newVal, true);
-								setCallDownStatePayoff(newCallDownPayoff);
+								let newCallDownPayoff = calcStatePayoff(Sd, newVal, true);
+								setCallXd(newCallDownPayoff);
 
-								let newCallDelta = calcDelta(newCallUpPayoff, newCallDownPayoff, upStatePrice, downStatePrice);
+								let newCallDelta = calcDelta(newCallUpPayoff, newCallDownPayoff, Su, Sd);
 								setCallDelta(newCallDelta);
 
 								let newCallB = calcBParam(R, uParam, dParam, newCallUpPayoff, newCallDownPayoff);
 								setCallBParam(newCallB);
 
-								setCallPrice(calcOptionPrice(spotPrice, newCallDelta, newCallB));
+								setCallPrice(calcOptionPrice(S, newCallDelta, newCallB));
 
 								// PUT
 
-								let newPutUpPayoff = calcStatePayoff(upStatePrice, newVal, false);
-								setPutUpStatePayoff(newPutUpPayoff);
+								let newPutUpPayoff = calcStatePayoff(Su, newVal, false);
+								setPutXu(newPutUpPayoff);
 
-								let newPutDownPayoff = calcStatePayoff(downStatePrice, newVal, false);
-								setPutDownStatePayoff(newPutDownPayoff);
+								let newPutDownPayoff = calcStatePayoff(Sd, newVal, false);
+								setPutXd(newPutDownPayoff);
 
-								let newPutDelta = calcDelta(newPutUpPayoff, newPutDownPayoff, upStatePrice, downStatePrice);
+								let newPutDelta = calcDelta(newPutUpPayoff, newPutDownPayoff, Su, Sd);
 								setPutDelta(newPutDelta);
 
 								let newPutB = calcBParam(R, uParam, dParam, newPutUpPayoff, newPutDownPayoff);
 								setPutBParam(newPutB);
 
-								setPutPrice(calcOptionPrice(spotPrice, newPutDelta, newPutB));
+								setPutPrice(calcOptionPrice(S, newPutDelta, newPutB));
 
 								// RNP
 								setCallPriceRNP(calcOptionPriceRNP(q, R, newCallUpPayoff, newCallDownPayoff));
@@ -179,41 +180,41 @@ export default function BinModel() {
 								let newVal = event.target.value;
 								setuParam(newVal);
 
-								let newUpPrice = spotPrice * newVal;
-								setUpStatePrice(newUpPrice);
+								let newUpPrice = S * newVal;
+								setSu(newUpPrice);
 
 								// CALL
 
-								let newCallUpPayoff = calcStatePayoff(newUpPrice, strikePrice, true);
-								setCallUpStatePayoff(newCallUpPayoff);
+								let newCallUpPayoff = calcStatePayoff(newUpPrice, K, true);
+								setCallXu(newCallUpPayoff);
 
-								let newCallDelta = calcDelta(newCallUpPayoff, callDownStatePayoff, newUpPrice, downStatePrice);
+								let newCallDelta = calcDelta(newCallUpPayoff, callXd, newUpPrice, Sd);
 								setCallDelta(newCallDelta);
 
-								let newCallB = calcBParam(R, newVal, dParam, newCallUpPayoff, callDownStatePayoff);
+								let newCallB = calcBParam(R, newVal, dParam, newCallUpPayoff, callXd);
 								setCallBParam(newCallB);
 
-								setCallPrice(calcOptionPrice(spotPrice, newCallDelta, newCallB));
+								setCallPrice(calcOptionPrice(S, newCallDelta, newCallB));
 
 								// PUT
 
-								let newPutUpPayoff = calcStatePayoff(newUpPrice, strikePrice, false);
-								setPutUpStatePayoff(newPutUpPayoff);
+								let newPutUpPayoff = calcStatePayoff(newUpPrice, K, false);
+								setPutXu(newPutUpPayoff);
 
-								let newPutDelta = calcDelta(newPutUpPayoff, putDownStatePayoff, newUpPrice, downStatePrice);
+								let newPutDelta = calcDelta(newPutUpPayoff, putXd, newUpPrice, Sd);
 								setPutDelta(newPutDelta);
 
-								let newPutB = calcBParam(R, newVal, dParam, newPutUpPayoff, putDownStatePayoff);
+								let newPutB = calcBParam(R, newVal, dParam, newPutUpPayoff, putXd);
 								setPutBParam(newPutB);
 
-								setPutPrice(calcOptionPrice(spotPrice, newPutDelta, newPutB));
+								setPutPrice(calcOptionPrice(S, newPutDelta, newPutB));
 
 								// RNP
 								let newQ = calcQ(R, newVal, dParam);
 								setQ(newQ);
 
-								setCallPriceRNP(calcOptionPriceRNP(newQ, R, newCallUpPayoff, callDownStatePayoff));
-								setPutPriceRNP(calcOptionPriceRNP(newQ, R, newPutUpPayoff, putDownStatePayoff));
+								setCallPriceRNP(calcOptionPriceRNP(newQ, R, newCallUpPayoff, callXd));
+								setPutPriceRNP(calcOptionPriceRNP(newQ, R, newPutUpPayoff, putXd));
 							}}
 						/>
 					</InputGroup>
@@ -227,41 +228,41 @@ export default function BinModel() {
 								let newVal = event.target.value;
 								setdParam(newVal);
 
-								let newDownPrice = spotPrice * newVal;
-								setDownStatePrice(newDownPrice);
+								let newDownPrice = S * newVal;
+								setSd(newDownPrice);
 
 								// CALL
 
-								let newCallDownPayoff = calcStatePayoff(newDownPrice, strikePrice, true);
-								setCallDownStatePayoff(newCallDownPayoff);
+								let newCallDownPayoff = calcStatePayoff(newDownPrice, K, true);
+								setCallXd(newCallDownPayoff);
 
-								let newCallDelta = calcDelta(callUpStatePayoff, newCallDownPayoff, upStatePrice, newDownPrice);
+								let newCallDelta = calcDelta(callXu, newCallDownPayoff, Su, newDownPrice);
 								setCallDelta(newCallDelta);
 
-								let newCallB = calcBParam(R, uParam, newVal, callUpStatePayoff, newCallDownPayoff);
+								let newCallB = calcBParam(R, uParam, newVal, callXu, newCallDownPayoff);
 								setCallBParam(newCallB);
 
-								setCallPrice(calcOptionPrice(spotPrice, newCallDelta, newCallB));
+								setCallPrice(calcOptionPrice(S, newCallDelta, newCallB));
 
 								// PUT
 
-								let newPutDownPayoff = calcStatePayoff(newDownPrice, strikePrice, false);
-								setPutDownStatePayoff(newPutDownPayoff);
+								let newPutDownPayoff = calcStatePayoff(newDownPrice, K, false);
+								setPutXd(newPutDownPayoff);
 
-								let newPutDelta = calcDelta(putUpStatePayoff, newPutDownPayoff, upStatePrice, newDownPrice);
+								let newPutDelta = calcDelta(putXu, newPutDownPayoff, Su, newDownPrice);
 								setPutDelta(newPutDelta);
 
-								let newPutB = calcBParam(R, uParam, newVal, putUpStatePayoff, newPutDownPayoff);
+								let newPutB = calcBParam(R, uParam, newVal, putXu, newPutDownPayoff);
 								setPutBParam(newPutB);
 
-								setPutPrice(calcOptionPrice(spotPrice, newPutDelta, newPutB));
+								setPutPrice(calcOptionPrice(S, newPutDelta, newPutB));
 
 								// RNP
 								let newQ = calcQ(R, uParam, newVal);
 								setQ(newQ);
 
-								setCallPriceRNP(calcOptionPriceRNP(newQ, R, callUpStatePayoff, newCallDownPayoff));
-								setPutPriceRNP(calcOptionPriceRNP(newQ, R, putUpStatePayoff, newPutDownPayoff));
+								setCallPriceRNP(calcOptionPriceRNP(newQ, R, callXu, newCallDownPayoff));
+								setPutPriceRNP(calcOptionPriceRNP(newQ, R, putXu, newPutDownPayoff));
 							}}
 						/>
 					</InputGroup>
@@ -277,24 +278,24 @@ export default function BinModel() {
 
 								// CALL
 
-								let newCallB = calcBParam(newVal, uParam, dParam, callUpStatePayoff, callDownStatePayoff);
+								let newCallB = calcBParam(newVal, uParam, dParam, callXu, callXd);
 								setCallBParam(newCallB);
 
-								setCallPrice(calcOptionPrice(spotPrice, callDelta, newCallB));
+								setCallPrice(calcOptionPrice(S, callDelta, newCallB));
 
 								// PUT
 
-								let newPutB = calcBParam(newVal, uParam, dParam, putUpStatePayoff, putDownStatePayoff);
+								let newPutB = calcBParam(newVal, uParam, dParam, putXu, putXd);
 								setPutBParam(newPutB);
 
-								setPutPrice(calcOptionPrice(spotPrice, putDelta, newPutB));
+								setPutPrice(calcOptionPrice(S, putDelta, newPutB));
 
 								// RNP
 								let newQ = calcQ(newVal, uParam, dParam);
 								setQ(newQ);
 
-								setCallPriceRNP(calcOptionPriceRNP(newQ, newVal, callUpStatePayoff, callDownStatePayoff));
-								setPutPriceRNP(calcOptionPriceRNP(newQ, newVal, putUpStatePayoff, putDownStatePayoff));
+								setCallPriceRNP(calcOptionPriceRNP(newQ, newVal, callXu, callXd));
+								setPutPriceRNP(calcOptionPriceRNP(newQ, newVal, putXu, putXd));
 							}}
 						/>
 					</InputGroup>
@@ -307,46 +308,46 @@ export default function BinModel() {
 					<InputGroup>
 						<InputGroup.Text>$</InputGroup.Text>
 						<Form.Control
-							value={upStatePrice}
+							value={Su}
 							onChange={(event) => {
 								let newVal = event.target.value;
-								setUpStatePrice(newVal);
+								setSu(newVal);
 
-								let newU = newVal / spotPrice;
+								let newU = newVal / S;
 								setuParam(newU);
 
 								// CALL
 
-								let newCallUpPayoff = calcStatePayoff(newVal, strikePrice, true);
-								setCallUpStatePayoff(newCallUpPayoff);
+								let newCallUpPayoff = calcStatePayoff(newVal, K, true);
+								setCallXu(newCallUpPayoff);
 
-								let newCallDelta = calcDelta(newCallUpPayoff, callDownStatePayoff, newVal, downStatePrice);
+								let newCallDelta = calcDelta(newCallUpPayoff, callXd, newVal, Sd);
 								setCallDelta(newCallDelta);
 
-								let newCallB = calcBParam(R, newU, dParam, newCallUpPayoff, callDownStatePayoff);
+								let newCallB = calcBParam(R, newU, dParam, newCallUpPayoff, callXd);
 								setCallBParam(newCallB);
 
-								setCallPrice(calcOptionPrice(spotPrice, newCallDelta, newCallB));
+								setCallPrice(calcOptionPrice(S, newCallDelta, newCallB));
 
 								// PUT
 
-								let newPutUpPayoff = calcStatePayoff(newVal, strikePrice, false);
-								setPutUpStatePayoff(newPutUpPayoff);
+								let newPutUpPayoff = calcStatePayoff(newVal, K, false);
+								setPutXu(newPutUpPayoff);
 
-								let newPutDelta = calcDelta(newPutUpPayoff, putDownStatePayoff, newVal, downStatePrice);
+								let newPutDelta = calcDelta(newPutUpPayoff, putXd, newVal, Sd);
 								setPutDelta(newPutDelta);
 
-								let newPutB = calcBParam(R, newU, dParam, newPutUpPayoff, putDownStatePayoff);
+								let newPutB = calcBParam(R, newU, dParam, newPutUpPayoff, putXd);
 								setPutBParam(newPutB);
 
-								setPutPrice(calcOptionPrice(spotPrice, newPutDelta, newPutB));
+								setPutPrice(calcOptionPrice(S, newPutDelta, newPutB));
 
 								// RNP
 								let newQ = calcQ(R, newU, dParam);
 								setQ(newQ);
 
-								setCallPriceRNP(calcOptionPriceRNP(newQ, R, newCallUpPayoff, callDownStatePayoff));
-								setPutPriceRNP(calcOptionPriceRNP(newQ, R, newPutUpPayoff, putDownStatePayoff));
+								setCallPriceRNP(calcOptionPriceRNP(newQ, R, newCallUpPayoff, callXd));
+								setPutPriceRNP(calcOptionPriceRNP(newQ, R, newPutUpPayoff, putXd));
 							}}
 						/>
 					</InputGroup>
@@ -356,46 +357,46 @@ export default function BinModel() {
 					<InputGroup>
 						<InputGroup.Text>$</InputGroup.Text>
 						<Form.Control
-							value={downStatePrice}
+							value={Sd}
 							onChange={(event) => {
 								let newVal = event.target.value;
-								setDownStatePrice(newVal);
+								setSd(newVal);
 
-								let newD = newVal / spotPrice;
+								let newD = newVal / S;
 								setdParam(newD);
 
 								// CALL
 
-								let newCallDownPayoff = calcStatePayoff(newVal, strikePrice, true);
-								setCallDownStatePayoff(newCallDownPayoff);
+								let newCallDownPayoff = calcStatePayoff(newVal, K, true);
+								setCallXd(newCallDownPayoff);
 
-								let newCallDelta = calcDelta(callUpStatePayoff, newCallDownPayoff, upStatePrice, newVal);
+								let newCallDelta = calcDelta(callXu, newCallDownPayoff, Su, newVal);
 								setCallDelta(newCallDelta);
 
-								let newCallB = calcBParam(R, uParam, newD, callUpStatePayoff, newCallDownPayoff);
+								let newCallB = calcBParam(R, uParam, newD, callXu, newCallDownPayoff);
 								setCallBParam(newCallB);
 
-								setCallPrice(calcOptionPrice(spotPrice, newCallDelta, newCallB));
+								setCallPrice(calcOptionPrice(S, newCallDelta, newCallB));
 
 								// PUT
 
-								let newPutDownPayoff = calcStatePayoff(newVal, strikePrice, false);
-								setPutDownStatePayoff(newPutDownPayoff);
+								let newPutDownPayoff = calcStatePayoff(newVal, K, false);
+								setPutXd(newPutDownPayoff);
 
-								let newPutDelta = calcDelta(putUpStatePayoff, newPutDownPayoff, upStatePrice, newVal);
+								let newPutDelta = calcDelta(putXu, newPutDownPayoff, Su, newVal);
 								setPutDelta(newPutDelta);
 
-								let newPutB = calcBParam(R, uParam, newD, putUpStatePayoff, newPutDownPayoff);
+								let newPutB = calcBParam(R, uParam, newD, putXu, newPutDownPayoff);
 								setPutBParam(newPutB);
 
-								setPutPrice(calcOptionPrice(spotPrice, newPutDelta, newPutB));
+								setPutPrice(calcOptionPrice(S, newPutDelta, newPutB));
 
 								// RNP
 								let newQ = calcQ(R, uParam, newD);
 								setQ(newQ);
 
-								setCallPriceRNP(calcOptionPriceRNP(newQ, R, callUpStatePayoff, newCallDownPayoff));
-								setPutPriceRNP(calcOptionPriceRNP(newQ, R, putUpStatePayoff, newPutDownPayoff));
+								setCallPriceRNP(calcOptionPriceRNP(newQ, R, callXu, newCallDownPayoff));
+								setPutPriceRNP(calcOptionPriceRNP(newQ, R, putXu, newPutDownPayoff));
 							}}
 						/>
 					</InputGroup>
@@ -421,14 +422,14 @@ export default function BinModel() {
 								<Form.Label>Up State Payoff (Gross)</Form.Label>
 								<InputGroup>
 									<InputGroup.Text>$</InputGroup.Text>
-									<Form.Control disabled value={callUpStatePayoff} />
+									<Form.Control disabled value={callXu} />
 								</InputGroup>
 							</Col>
 							<Col>
 								<Form.Label>Down State Payoff (Gross)</Form.Label>
 								<InputGroup>
 									<InputGroup.Text>$</InputGroup.Text>
-									<Form.Control disabled value={callDownStatePayoff} />
+									<Form.Control disabled value={callXd} />
 								</InputGroup>
 							</Col>
 						</Row>
@@ -463,14 +464,14 @@ export default function BinModel() {
 								<Form.Label>Up State Payoff (Gross)</Form.Label>
 								<InputGroup>
 									<InputGroup.Text>$</InputGroup.Text>
-									<Form.Control disabled value={putUpStatePayoff} />
+									<Form.Control disabled value={putXu} />
 								</InputGroup>
 							</Col>
 							<Col>
 								<Form.Label>Down State Payoff (Gross)</Form.Label>
 								<InputGroup>
 									<InputGroup.Text>$</InputGroup.Text>
-									<Form.Control disabled value={putDownStatePayoff} />
+									<Form.Control disabled value={putXd} />
 								</InputGroup>
 							</Col>
 						</Row>
@@ -525,14 +526,14 @@ export default function BinModel() {
 									<Form.Label>Up State Payoff (Gross)</Form.Label>
 									<InputGroup>
 										<InputGroup.Text>$</InputGroup.Text>
-										<Form.Control disabled value={callUpStatePayoff} />
+										<Form.Control disabled value={callXu} />
 									</InputGroup>
 								</Col>
 								<Col>
 									<Form.Label>Down State Payoff (Gross)</Form.Label>
 									<InputGroup>
 										<InputGroup.Text>$</InputGroup.Text>
-										<Form.Control disabled value={callDownStatePayoff} />
+										<Form.Control disabled value={callXd} />
 									</InputGroup>
 								</Col>
 							</Row>
@@ -552,14 +553,14 @@ export default function BinModel() {
 									<Form.Label>Up State Payoff (Gross)</Form.Label>
 									<InputGroup>
 										<InputGroup.Text>$</InputGroup.Text>
-										<Form.Control disabled value={putUpStatePayoff} />
+										<Form.Control disabled value={putXu} />
 									</InputGroup>
 								</Col>
 								<Col>
 									<Form.Label>Down State Payoff (Gross)</Form.Label>
 									<InputGroup>
 										<InputGroup.Text>$</InputGroup.Text>
-										<Form.Control disabled value={putDownStatePayoff} />
+										<Form.Control disabled value={putXd} />
 									</InputGroup>
 								</Col>
 							</Row>

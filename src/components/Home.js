@@ -10,7 +10,7 @@ import '../css/Home.css';
 export default function Home() {
 	const navigate = useNavigate();
 	return (
-		<Container className='container'>
+		<Container className='containerHome'>
 			<Row>
 				<Col onClick={() => navigate('/options-visualizer')}>
 					<Tool name={'Option Visualizer'} icon={ovlogo} description='Create options spreads and see thier payoffs.'></Tool>
