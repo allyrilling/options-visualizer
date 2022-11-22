@@ -36,12 +36,10 @@ export default function BinModel() {
 	function calcStatePayoff(spot, strike, isCall) {
 		let payoff = -1;
 		if (isCall) {
-			payoff = spot - strike;
+			payoff = Math.max(0, spot - strike);
 		} else {
-			payoff = strike - spot;
+			payoff = Math.max(0, strike - spot);
 		}
-
-		payoff = payoff > 0 ? payoff : 0;
 		return payoff;
 	}
 
