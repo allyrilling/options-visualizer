@@ -1,9 +1,16 @@
 import React from 'react';
-import { Col, Container, Row, Form, InputGroup } from 'react-bootstrap';
+import { Col, Container, Row, Form, InputGroup, ButtonGroup, Button } from 'react-bootstrap';
 import { useState } from 'react';
 import '../css/BinModel.css';
+import MultiStepBinModel from './MultiStepBinModel';
 
 export default function BinModel() {
+	const modelTypes = {
+		single: 'Single-Step Binomial Model',
+		multi: 'Multi-Step Binomial Model',
+	};
+	const [modelType, setModelType] = useState(modelTypes.single);
+
 	const [S, setS] = useState(100);
 	const [K, setK] = useState(110);
 	const [uParam, setuParam] = useState(1.2);
@@ -65,513 +72,528 @@ export default function BinModel() {
 
 	return (
 		<Container className='container'>
-			<h1>General Inputs</h1>
-			<Row>
-				<Col>
-					<Form.Label>Spot Price</Form.Label>
-					<InputGroup>
-						<InputGroup.Text>$</InputGroup.Text>
-						<Form.Control
-							value={S}
-							onChange={(event) => {
-								let newVal = event.target.value;
-								setS(newVal);
-
-								let newUpPrice = newVal * uParam;
-								setSu(newUpPrice);
-
-								let newDownPrice = newVal * dParam;
-								setSd(newDownPrice);
-
-								// CALL
-
-								let newCallUpPayoff = calcStatePayoff(newUpPrice, K, true);
-								setCallXu(newCallUpPayoff);
-
-								let newCallDownPayoff = calcStatePayoff(newDownPrice, K, true);
-								setCallXd(newCallDownPayoff);
-
-								let newCallDelta = calcDelta(newCallUpPayoff, newCallDownPayoff, newUpPrice, newDownPrice);
-								setCallDelta(newCallDelta);
-
-								let newCallB = calcBParam(R, uParam, dParam, newCallUpPayoff, newCallDownPayoff);
-								setCallBParam(newCallB);
-
-								// PUT
-
-								let newPutUpPayoff = calcStatePayoff(newUpPrice, K, false);
-								setPutXu(newPutUpPayoff);
-
-								let newPutDownPayoff = calcStatePayoff(newDownPrice, K, false);
-								setPutXd(newPutDownPayoff);
-
-								let newPutDelta = calcDelta(newPutUpPayoff, newPutDownPayoff, newUpPrice, newDownPrice);
-								setPutDelta(newPutDelta);
-
-								let newPutB = calcBParam(R, uParam, dParam, newPutUpPayoff, newPutDownPayoff);
-								setPutBParam(newPutB);
-
-								setPutPrice(calcOptionPrice(newVal, newPutDelta, newPutB));
-
-								// RNP
-								setCallPriceRNP(calcOptionPriceRNP(q, R, newCallUpPayoff, newCallDownPayoff));
-								setPutPriceRNP(calcOptionPriceRNP(q, R, newPutUpPayoff, newPutDownPayoff));
-							}}
-						/>
-					</InputGroup>
-				</Col>
-				<Col>
-					<Form.Label>Strike Price</Form.Label>
-					<InputGroup>
-						<InputGroup.Text>$</InputGroup.Text>
-						<Form.Control
-							value={K}
-							onChange={(event) => {
-								let newVal = event.target.value;
-								setK(newVal);
-
-								// CALL
-
-								let newCallUpPayoff = calcStatePayoff(Su, newVal, true);
-								setCallXu(newCallUpPayoff);
-
-								let newCallDownPayoff = calcStatePayoff(Sd, newVal, true);
-								setCallXd(newCallDownPayoff);
-
-								let newCallDelta = calcDelta(newCallUpPayoff, newCallDownPayoff, Su, Sd);
-								setCallDelta(newCallDelta);
-
-								let newCallB = calcBParam(R, uParam, dParam, newCallUpPayoff, newCallDownPayoff);
-								setCallBParam(newCallB);
-
-								setCallPrice(calcOptionPrice(S, newCallDelta, newCallB));
-
-								// PUT
-
-								let newPutUpPayoff = calcStatePayoff(Su, newVal, false);
-								setPutXu(newPutUpPayoff);
-
-								let newPutDownPayoff = calcStatePayoff(Sd, newVal, false);
-								setPutXd(newPutDownPayoff);
-
-								let newPutDelta = calcDelta(newPutUpPayoff, newPutDownPayoff, Su, Sd);
-								setPutDelta(newPutDelta);
-
-								let newPutB = calcBParam(R, uParam, dParam, newPutUpPayoff, newPutDownPayoff);
-								setPutBParam(newPutB);
-
-								setPutPrice(calcOptionPrice(S, newPutDelta, newPutB));
-
-								// RNP
-								setCallPriceRNP(calcOptionPriceRNP(q, R, newCallUpPayoff, newCallDownPayoff));
-								setPutPriceRNP(calcOptionPriceRNP(q, R, newPutUpPayoff, newPutDownPayoff));
-							}}
-						/>
-					</InputGroup>
-				</Col>
-				<Col>
-					<Form.Label>u-Parameter</Form.Label>
-					<InputGroup>
-						<Form.Control
-							value={uParam}
-							onChange={(event) => {
-								let newVal = event.target.value;
-								setuParam(newVal);
-
-								let newUpPrice = S * newVal;
-								setSu(newUpPrice);
-
-								// CALL
-
-								let newCallUpPayoff = calcStatePayoff(newUpPrice, K, true);
-								setCallXu(newCallUpPayoff);
-
-								let newCallDelta = calcDelta(newCallUpPayoff, callXd, newUpPrice, Sd);
-								setCallDelta(newCallDelta);
-
-								let newCallB = calcBParam(R, newVal, dParam, newCallUpPayoff, callXd);
-								setCallBParam(newCallB);
-
-								setCallPrice(calcOptionPrice(S, newCallDelta, newCallB));
-
-								// PUT
-
-								let newPutUpPayoff = calcStatePayoff(newUpPrice, K, false);
-								setPutXu(newPutUpPayoff);
-
-								let newPutDelta = calcDelta(newPutUpPayoff, putXd, newUpPrice, Sd);
-								setPutDelta(newPutDelta);
-
-								let newPutB = calcBParam(R, newVal, dParam, newPutUpPayoff, putXd);
-								setPutBParam(newPutB);
-
-								setPutPrice(calcOptionPrice(S, newPutDelta, newPutB));
-
-								// RNP
-								let newQ = calcQ(R, newVal, dParam);
-								setQ(newQ);
-
-								setCallPriceRNP(calcOptionPriceRNP(newQ, R, newCallUpPayoff, callXd));
-								setPutPriceRNP(calcOptionPriceRNP(newQ, R, newPutUpPayoff, putXd));
-							}}
-						/>
-					</InputGroup>
-				</Col>
-				<Col>
-					<Form.Label>d-Parameter</Form.Label>
-					<InputGroup>
-						<Form.Control
-							value={dParam}
-							onChange={(event) => {
-								let newVal = event.target.value;
-								setdParam(newVal);
-
-								let newDownPrice = S * newVal;
-								setSd(newDownPrice);
-
-								// CALL
-
-								let newCallDownPayoff = calcStatePayoff(newDownPrice, K, true);
-								setCallXd(newCallDownPayoff);
-
-								let newCallDelta = calcDelta(callXu, newCallDownPayoff, Su, newDownPrice);
-								setCallDelta(newCallDelta);
-
-								let newCallB = calcBParam(R, uParam, newVal, callXu, newCallDownPayoff);
-								setCallBParam(newCallB);
-
-								setCallPrice(calcOptionPrice(S, newCallDelta, newCallB));
-
-								// PUT
-
-								let newPutDownPayoff = calcStatePayoff(newDownPrice, K, false);
-								setPutXd(newPutDownPayoff);
-
-								let newPutDelta = calcDelta(putXu, newPutDownPayoff, Su, newDownPrice);
-								setPutDelta(newPutDelta);
-
-								let newPutB = calcBParam(R, uParam, newVal, putXu, newPutDownPayoff);
-								setPutBParam(newPutB);
-
-								setPutPrice(calcOptionPrice(S, newPutDelta, newPutB));
-
-								// RNP
-								let newQ = calcQ(R, uParam, newVal);
-								setQ(newQ);
-
-								setCallPriceRNP(calcOptionPriceRNP(newQ, R, callXu, newCallDownPayoff));
-								setPutPriceRNP(calcOptionPriceRNP(newQ, R, putXu, newPutDownPayoff));
-							}}
-						/>
-					</InputGroup>
-				</Col>
-				<Col>
-					<Form.Label>Gross Interest Rate</Form.Label>
-					<InputGroup>
-						<Form.Control
-							value={R}
-							onChange={(event) => {
-								let newVal = event.target.value;
-								setR(newVal);
-
-								// CALL
-
-								let newCallB = calcBParam(newVal, uParam, dParam, callXu, callXd);
-								setCallBParam(newCallB);
-
-								setCallPrice(calcOptionPrice(S, callDelta, newCallB));
-
-								// PUT
-
-								let newPutB = calcBParam(newVal, uParam, dParam, putXu, putXd);
-								setPutBParam(newPutB);
-
-								setPutPrice(calcOptionPrice(S, putDelta, newPutB));
-
-								// RNP
-								let newQ = calcQ(newVal, uParam, dParam);
-								setQ(newQ);
-
-								setCallPriceRNP(calcOptionPriceRNP(newQ, newVal, callXu, callXd));
-								setPutPriceRNP(calcOptionPriceRNP(newQ, newVal, putXu, putXd));
-							}}
-						/>
-					</InputGroup>
-				</Col>
-			</Row>
-			<Row>
-				{/* <h2>Replication Portfolio Inputs</h2> */}
-				<Col>
-					<Form.Label>Up State Price</Form.Label>
-					<InputGroup>
-						<InputGroup.Text>$</InputGroup.Text>
-						<Form.Control
-							value={Su}
-							onChange={(event) => {
-								let newVal = event.target.value;
-								setSu(newVal);
-
-								let newU = newVal / S;
-								setuParam(newU);
-
-								// CALL
-
-								let newCallUpPayoff = calcStatePayoff(newVal, K, true);
-								setCallXu(newCallUpPayoff);
-
-								let newCallDelta = calcDelta(newCallUpPayoff, callXd, newVal, Sd);
-								setCallDelta(newCallDelta);
-
-								let newCallB = calcBParam(R, newU, dParam, newCallUpPayoff, callXd);
-								setCallBParam(newCallB);
-
-								setCallPrice(calcOptionPrice(S, newCallDelta, newCallB));
-
-								// PUT
-
-								let newPutUpPayoff = calcStatePayoff(newVal, K, false);
-								setPutXu(newPutUpPayoff);
-
-								let newPutDelta = calcDelta(newPutUpPayoff, putXd, newVal, Sd);
-								setPutDelta(newPutDelta);
-
-								let newPutB = calcBParam(R, newU, dParam, newPutUpPayoff, putXd);
-								setPutBParam(newPutB);
-
-								setPutPrice(calcOptionPrice(S, newPutDelta, newPutB));
-
-								// RNP
-								let newQ = calcQ(R, newU, dParam);
-								setQ(newQ);
-
-								setCallPriceRNP(calcOptionPriceRNP(newQ, R, newCallUpPayoff, callXd));
-								setPutPriceRNP(calcOptionPriceRNP(newQ, R, newPutUpPayoff, putXd));
-							}}
-						/>
-					</InputGroup>
-				</Col>
-				<Col>
-					<Form.Label>Down State Price</Form.Label>
-					<InputGroup>
-						<InputGroup.Text>$</InputGroup.Text>
-						<Form.Control
-							value={Sd}
-							onChange={(event) => {
-								let newVal = event.target.value;
-								setSd(newVal);
-
-								let newD = newVal / S;
-								setdParam(newD);
-
-								// CALL
-
-								let newCallDownPayoff = calcStatePayoff(newVal, K, true);
-								setCallXd(newCallDownPayoff);
-
-								let newCallDelta = calcDelta(callXu, newCallDownPayoff, Su, newVal);
-								setCallDelta(newCallDelta);
-
-								let newCallB = calcBParam(R, uParam, newD, callXu, newCallDownPayoff);
-								setCallBParam(newCallB);
-
-								setCallPrice(calcOptionPrice(S, newCallDelta, newCallB));
-
-								// PUT
-
-								let newPutDownPayoff = calcStatePayoff(newVal, K, false);
-								setPutXd(newPutDownPayoff);
-
-								let newPutDelta = calcDelta(putXu, newPutDownPayoff, Su, newVal);
-								setPutDelta(newPutDelta);
-
-								let newPutB = calcBParam(R, uParam, newD, putXu, newPutDownPayoff);
-								setPutBParam(newPutB);
-
-								setPutPrice(calcOptionPrice(S, newPutDelta, newPutB));
-
-								// RNP
-								let newQ = calcQ(R, uParam, newD);
-								setQ(newQ);
-
-								setCallPriceRNP(calcOptionPriceRNP(newQ, R, callXu, newCallDownPayoff));
-								setPutPriceRNP(calcOptionPriceRNP(newQ, R, putXu, newPutDownPayoff));
-							}}
-						/>
-					</InputGroup>
-				</Col>
-				<Col>
-					<Form.Label>Solver Method</Form.Label>
-					<Form.Select value={solverMethod} onChange={(event) => setSolverMethod(event.target.value)}>
-						<option>{solverMethods.rp}</option>
-						<option>{solverMethods.rnp}</option>
-					</Form.Select>
-				</Col>
-			</Row>
-			{solverMethod === solverMethods.rp ? (
-				<Row>
+			<ButtonGroup aria-label='Basic example'>
+				<Button variant={modelType === modelTypes.single ? 'danger' : 'secondary'} onClick={() => setModelType(modelTypes.single)}>
+					{modelTypes.single}
+				</Button>
+				<Button variant={modelType === modelTypes.multi ? 'danger' : 'secondary'} onClick={() => setModelType(modelTypes.multi)}>
+					{modelTypes.multi}
+				</Button>
+			</ButtonGroup>
+			{modelType === modelTypes.single ? (
+				<Container>
 					<p></p>
-					<h1>{solverMethods.rp}</h1>
-					<Col>
-						{/* CALL */}
-						<p></p>
-						<h2>Call Output</h2>
-						<Row>
-							<Col>
-								<Form.Label>Up State Payoff (Gross)</Form.Label>
-								<InputGroup>
-									<InputGroup.Text>$</InputGroup.Text>
-									<Form.Control disabled value={callXu} />
-								</InputGroup>
-							</Col>
-							<Col>
-								<Form.Label>Down State Payoff (Gross)</Form.Label>
-								<InputGroup>
-									<InputGroup.Text>$</InputGroup.Text>
-									<Form.Control disabled value={callXd} />
-								</InputGroup>
-							</Col>
-						</Row>
-						<Row>
-							<Col>
-								<Form.Label>Delta</Form.Label>
-								<InputGroup>
-									<Form.Control disabled value={callDelta} />
-								</InputGroup>
-							</Col>
-							<Col>
-								<Form.Label>B-Parameter</Form.Label>
-								<InputGroup>
-									<Form.Control disabled value={callBParam} />
-								</InputGroup>
-							</Col>
-						</Row>
+					<h1>General Inputs</h1>
+					<Row>
 						<Col>
-							<Form.Label>Call Price</Form.Label>
+							<Form.Label>Spot Price</Form.Label>
 							<InputGroup>
 								<InputGroup.Text>$</InputGroup.Text>
-								<Form.Control disabled value={callPrice} />
+								<Form.Control
+									value={S}
+									onChange={(event) => {
+										let newVal = event.target.value;
+										setS(newVal);
+
+										let newUpPrice = newVal * uParam;
+										setSu(newUpPrice);
+
+										let newDownPrice = newVal * dParam;
+										setSd(newDownPrice);
+
+										// CALL
+
+										let newCallUpPayoff = calcStatePayoff(newUpPrice, K, true);
+										setCallXu(newCallUpPayoff);
+
+										let newCallDownPayoff = calcStatePayoff(newDownPrice, K, true);
+										setCallXd(newCallDownPayoff);
+
+										let newCallDelta = calcDelta(newCallUpPayoff, newCallDownPayoff, newUpPrice, newDownPrice);
+										setCallDelta(newCallDelta);
+
+										let newCallB = calcBParam(R, uParam, dParam, newCallUpPayoff, newCallDownPayoff);
+										setCallBParam(newCallB);
+
+										// PUT
+
+										let newPutUpPayoff = calcStatePayoff(newUpPrice, K, false);
+										setPutXu(newPutUpPayoff);
+
+										let newPutDownPayoff = calcStatePayoff(newDownPrice, K, false);
+										setPutXd(newPutDownPayoff);
+
+										let newPutDelta = calcDelta(newPutUpPayoff, newPutDownPayoff, newUpPrice, newDownPrice);
+										setPutDelta(newPutDelta);
+
+										let newPutB = calcBParam(R, uParam, dParam, newPutUpPayoff, newPutDownPayoff);
+										setPutBParam(newPutB);
+
+										setPutPrice(calcOptionPrice(newVal, newPutDelta, newPutB));
+
+										// RNP
+										setCallPriceRNP(calcOptionPriceRNP(q, R, newCallUpPayoff, newCallDownPayoff));
+										setPutPriceRNP(calcOptionPriceRNP(q, R, newPutUpPayoff, newPutDownPayoff));
+									}}
+								/>
 							</InputGroup>
 						</Col>
-					</Col>
-					<Col>
-						{/* PUT*/}
-						<p></p>
-						<h2>Put Output</h2>
-						<Row>
-							<Col>
-								<Form.Label>Up State Payoff (Gross)</Form.Label>
-								<InputGroup>
-									<InputGroup.Text>$</InputGroup.Text>
-									<Form.Control disabled value={putXu} />
-								</InputGroup>
-							</Col>
-							<Col>
-								<Form.Label>Down State Payoff (Gross)</Form.Label>
-								<InputGroup>
-									<InputGroup.Text>$</InputGroup.Text>
-									<Form.Control disabled value={putXd} />
-								</InputGroup>
-							</Col>
-						</Row>
-						<Row>
-							<Col>
-								<Form.Label>Delta</Form.Label>
-								<InputGroup>
-									<Form.Control disabled value={putDelta} />
-								</InputGroup>
-							</Col>
-							<Col>
-								<Form.Label>B-Parameter</Form.Label>
-								<InputGroup>
-									<Form.Control disabled value={putBParam} />
-								</InputGroup>
-							</Col>
-						</Row>
 						<Col>
-							<Form.Label>Put Price</Form.Label>
+							<Form.Label>Strike Price</Form.Label>
 							<InputGroup>
 								<InputGroup.Text>$</InputGroup.Text>
-								<Form.Control disabled value={putPrice} />
+								<Form.Control
+									value={K}
+									onChange={(event) => {
+										let newVal = event.target.value;
+										setK(newVal);
+
+										// CALL
+
+										let newCallUpPayoff = calcStatePayoff(Su, newVal, true);
+										setCallXu(newCallUpPayoff);
+
+										let newCallDownPayoff = calcStatePayoff(Sd, newVal, true);
+										setCallXd(newCallDownPayoff);
+
+										let newCallDelta = calcDelta(newCallUpPayoff, newCallDownPayoff, Su, Sd);
+										setCallDelta(newCallDelta);
+
+										let newCallB = calcBParam(R, uParam, dParam, newCallUpPayoff, newCallDownPayoff);
+										setCallBParam(newCallB);
+
+										setCallPrice(calcOptionPrice(S, newCallDelta, newCallB));
+
+										// PUT
+
+										let newPutUpPayoff = calcStatePayoff(Su, newVal, false);
+										setPutXu(newPutUpPayoff);
+
+										let newPutDownPayoff = calcStatePayoff(Sd, newVal, false);
+										setPutXd(newPutDownPayoff);
+
+										let newPutDelta = calcDelta(newPutUpPayoff, newPutDownPayoff, Su, Sd);
+										setPutDelta(newPutDelta);
+
+										let newPutB = calcBParam(R, uParam, dParam, newPutUpPayoff, newPutDownPayoff);
+										setPutBParam(newPutB);
+
+										setPutPrice(calcOptionPrice(S, newPutDelta, newPutB));
+
+										// RNP
+										setCallPriceRNP(calcOptionPriceRNP(q, R, newCallUpPayoff, newCallDownPayoff));
+										setPutPriceRNP(calcOptionPriceRNP(q, R, newPutUpPayoff, newPutDownPayoff));
+									}}
+								/>
 							</InputGroup>
 						</Col>
-					</Col>
-				</Row>
+						<Col>
+							<Form.Label>u-Parameter</Form.Label>
+							<InputGroup>
+								<Form.Control
+									value={uParam}
+									onChange={(event) => {
+										let newVal = event.target.value;
+										setuParam(newVal);
+
+										let newUpPrice = S * newVal;
+										setSu(newUpPrice);
+
+										// CALL
+
+										let newCallUpPayoff = calcStatePayoff(newUpPrice, K, true);
+										setCallXu(newCallUpPayoff);
+
+										let newCallDelta = calcDelta(newCallUpPayoff, callXd, newUpPrice, Sd);
+										setCallDelta(newCallDelta);
+
+										let newCallB = calcBParam(R, newVal, dParam, newCallUpPayoff, callXd);
+										setCallBParam(newCallB);
+
+										setCallPrice(calcOptionPrice(S, newCallDelta, newCallB));
+
+										// PUT
+
+										let newPutUpPayoff = calcStatePayoff(newUpPrice, K, false);
+										setPutXu(newPutUpPayoff);
+
+										let newPutDelta = calcDelta(newPutUpPayoff, putXd, newUpPrice, Sd);
+										setPutDelta(newPutDelta);
+
+										let newPutB = calcBParam(R, newVal, dParam, newPutUpPayoff, putXd);
+										setPutBParam(newPutB);
+
+										setPutPrice(calcOptionPrice(S, newPutDelta, newPutB));
+
+										// RNP
+										let newQ = calcQ(R, newVal, dParam);
+										setQ(newQ);
+
+										setCallPriceRNP(calcOptionPriceRNP(newQ, R, newCallUpPayoff, callXd));
+										setPutPriceRNP(calcOptionPriceRNP(newQ, R, newPutUpPayoff, putXd));
+									}}
+								/>
+							</InputGroup>
+						</Col>
+						<Col>
+							<Form.Label>d-Parameter</Form.Label>
+							<InputGroup>
+								<Form.Control
+									value={dParam}
+									onChange={(event) => {
+										let newVal = event.target.value;
+										setdParam(newVal);
+
+										let newDownPrice = S * newVal;
+										setSd(newDownPrice);
+
+										// CALL
+
+										let newCallDownPayoff = calcStatePayoff(newDownPrice, K, true);
+										setCallXd(newCallDownPayoff);
+
+										let newCallDelta = calcDelta(callXu, newCallDownPayoff, Su, newDownPrice);
+										setCallDelta(newCallDelta);
+
+										let newCallB = calcBParam(R, uParam, newVal, callXu, newCallDownPayoff);
+										setCallBParam(newCallB);
+
+										setCallPrice(calcOptionPrice(S, newCallDelta, newCallB));
+
+										// PUT
+
+										let newPutDownPayoff = calcStatePayoff(newDownPrice, K, false);
+										setPutXd(newPutDownPayoff);
+
+										let newPutDelta = calcDelta(putXu, newPutDownPayoff, Su, newDownPrice);
+										setPutDelta(newPutDelta);
+
+										let newPutB = calcBParam(R, uParam, newVal, putXu, newPutDownPayoff);
+										setPutBParam(newPutB);
+
+										setPutPrice(calcOptionPrice(S, newPutDelta, newPutB));
+
+										// RNP
+										let newQ = calcQ(R, uParam, newVal);
+										setQ(newQ);
+
+										setCallPriceRNP(calcOptionPriceRNP(newQ, R, callXu, newCallDownPayoff));
+										setPutPriceRNP(calcOptionPriceRNP(newQ, R, putXu, newPutDownPayoff));
+									}}
+								/>
+							</InputGroup>
+						</Col>
+						<Col>
+							<Form.Label>Gross Interest Rate</Form.Label>
+							<InputGroup>
+								<Form.Control
+									value={R}
+									onChange={(event) => {
+										let newVal = event.target.value;
+										setR(newVal);
+
+										// CALL
+
+										let newCallB = calcBParam(newVal, uParam, dParam, callXu, callXd);
+										setCallBParam(newCallB);
+
+										setCallPrice(calcOptionPrice(S, callDelta, newCallB));
+
+										// PUT
+
+										let newPutB = calcBParam(newVal, uParam, dParam, putXu, putXd);
+										setPutBParam(newPutB);
+
+										setPutPrice(calcOptionPrice(S, putDelta, newPutB));
+
+										// RNP
+										let newQ = calcQ(newVal, uParam, dParam);
+										setQ(newQ);
+
+										setCallPriceRNP(calcOptionPriceRNP(newQ, newVal, callXu, callXd));
+										setPutPriceRNP(calcOptionPriceRNP(newQ, newVal, putXu, putXd));
+									}}
+								/>
+							</InputGroup>
+						</Col>
+					</Row>
+					<Row>
+						{/* <h2>Replication Portfolio Inputs</h2> */}
+						<Col>
+							<Form.Label>Up State Price</Form.Label>
+							<InputGroup>
+								<InputGroup.Text>$</InputGroup.Text>
+								<Form.Control
+									value={Su}
+									onChange={(event) => {
+										let newVal = event.target.value;
+										setSu(newVal);
+
+										let newU = newVal / S;
+										setuParam(newU);
+
+										// CALL
+
+										let newCallUpPayoff = calcStatePayoff(newVal, K, true);
+										setCallXu(newCallUpPayoff);
+
+										let newCallDelta = calcDelta(newCallUpPayoff, callXd, newVal, Sd);
+										setCallDelta(newCallDelta);
+
+										let newCallB = calcBParam(R, newU, dParam, newCallUpPayoff, callXd);
+										setCallBParam(newCallB);
+
+										setCallPrice(calcOptionPrice(S, newCallDelta, newCallB));
+
+										// PUT
+
+										let newPutUpPayoff = calcStatePayoff(newVal, K, false);
+										setPutXu(newPutUpPayoff);
+
+										let newPutDelta = calcDelta(newPutUpPayoff, putXd, newVal, Sd);
+										setPutDelta(newPutDelta);
+
+										let newPutB = calcBParam(R, newU, dParam, newPutUpPayoff, putXd);
+										setPutBParam(newPutB);
+
+										setPutPrice(calcOptionPrice(S, newPutDelta, newPutB));
+
+										// RNP
+										let newQ = calcQ(R, newU, dParam);
+										setQ(newQ);
+
+										setCallPriceRNP(calcOptionPriceRNP(newQ, R, newCallUpPayoff, callXd));
+										setPutPriceRNP(calcOptionPriceRNP(newQ, R, newPutUpPayoff, putXd));
+									}}
+								/>
+							</InputGroup>
+						</Col>
+						<Col>
+							<Form.Label>Down State Price</Form.Label>
+							<InputGroup>
+								<InputGroup.Text>$</InputGroup.Text>
+								<Form.Control
+									value={Sd}
+									onChange={(event) => {
+										let newVal = event.target.value;
+										setSd(newVal);
+
+										let newD = newVal / S;
+										setdParam(newD);
+
+										// CALL
+
+										let newCallDownPayoff = calcStatePayoff(newVal, K, true);
+										setCallXd(newCallDownPayoff);
+
+										let newCallDelta = calcDelta(callXu, newCallDownPayoff, Su, newVal);
+										setCallDelta(newCallDelta);
+
+										let newCallB = calcBParam(R, uParam, newD, callXu, newCallDownPayoff);
+										setCallBParam(newCallB);
+
+										setCallPrice(calcOptionPrice(S, newCallDelta, newCallB));
+
+										// PUT
+
+										let newPutDownPayoff = calcStatePayoff(newVal, K, false);
+										setPutXd(newPutDownPayoff);
+
+										let newPutDelta = calcDelta(putXu, newPutDownPayoff, Su, newVal);
+										setPutDelta(newPutDelta);
+
+										let newPutB = calcBParam(R, uParam, newD, putXu, newPutDownPayoff);
+										setPutBParam(newPutB);
+
+										setPutPrice(calcOptionPrice(S, newPutDelta, newPutB));
+
+										// RNP
+										let newQ = calcQ(R, uParam, newD);
+										setQ(newQ);
+
+										setCallPriceRNP(calcOptionPriceRNP(newQ, R, callXu, newCallDownPayoff));
+										setPutPriceRNP(calcOptionPriceRNP(newQ, R, putXu, newPutDownPayoff));
+									}}
+								/>
+							</InputGroup>
+						</Col>
+						<Col>
+							<Form.Label>Solver Method</Form.Label>
+							<Form.Select value={solverMethod} onChange={(event) => setSolverMethod(event.target.value)}>
+								<option>{solverMethods.rp}</option>
+								<option>{solverMethods.rnp}</option>
+							</Form.Select>
+						</Col>
+					</Row>
+					{solverMethod === solverMethods.rp ? (
+						<Row>
+							<p></p>
+							<h1>{solverMethods.rp}</h1>
+							<Col>
+								{/* CALL */}
+								<p></p>
+								<h2>Call Output</h2>
+								<Row>
+									<Col>
+										<Form.Label>Up State Payoff (Gross)</Form.Label>
+										<InputGroup>
+											<InputGroup.Text>$</InputGroup.Text>
+											<Form.Control disabled value={callXu} />
+										</InputGroup>
+									</Col>
+									<Col>
+										<Form.Label>Down State Payoff (Gross)</Form.Label>
+										<InputGroup>
+											<InputGroup.Text>$</InputGroup.Text>
+											<Form.Control disabled value={callXd} />
+										</InputGroup>
+									</Col>
+								</Row>
+								<Row>
+									<Col>
+										<Form.Label>Delta</Form.Label>
+										<InputGroup>
+											<Form.Control disabled value={callDelta} />
+										</InputGroup>
+									</Col>
+									<Col>
+										<Form.Label>B-Parameter</Form.Label>
+										<InputGroup>
+											<Form.Control disabled value={callBParam} />
+										</InputGroup>
+									</Col>
+								</Row>
+								<Col>
+									<Form.Label>Call Price</Form.Label>
+									<InputGroup>
+										<InputGroup.Text>$</InputGroup.Text>
+										<Form.Control disabled value={callPrice} />
+									</InputGroup>
+								</Col>
+							</Col>
+							<Col>
+								{/* PUT*/}
+								<p></p>
+								<h2>Put Output</h2>
+								<Row>
+									<Col>
+										<Form.Label>Up State Payoff (Gross)</Form.Label>
+										<InputGroup>
+											<InputGroup.Text>$</InputGroup.Text>
+											<Form.Control disabled value={putXu} />
+										</InputGroup>
+									</Col>
+									<Col>
+										<Form.Label>Down State Payoff (Gross)</Form.Label>
+										<InputGroup>
+											<InputGroup.Text>$</InputGroup.Text>
+											<Form.Control disabled value={putXd} />
+										</InputGroup>
+									</Col>
+								</Row>
+								<Row>
+									<Col>
+										<Form.Label>Delta</Form.Label>
+										<InputGroup>
+											<Form.Control disabled value={putDelta} />
+										</InputGroup>
+									</Col>
+									<Col>
+										<Form.Label>B-Parameter</Form.Label>
+										<InputGroup>
+											<Form.Control disabled value={putBParam} />
+										</InputGroup>
+									</Col>
+								</Row>
+								<Col>
+									<Form.Label>Put Price</Form.Label>
+									<InputGroup>
+										<InputGroup.Text>$</InputGroup.Text>
+										<Form.Control disabled value={putPrice} />
+									</InputGroup>
+								</Col>
+							</Col>
+						</Row>
+					) : (
+						<Row>
+							<p></p>
+							<h1>{solverMethods.rnp}</h1>
+							{/* CALL */}
+							<Row>
+								<Col>
+									<Form.Label>q</Form.Label>
+									<InputGroup>
+										<Form.Control disabled value={q} />
+									</InputGroup>
+								</Col>
+								<Col>
+									<Form.Label>1-q</Form.Label>
+									<InputGroup>
+										<Form.Control disabled value={1 - q} />
+									</InputGroup>
+								</Col>
+							</Row>
+							<Row>
+								<Col>
+									<p></p>
+									<h2>Call Output</h2>
+									<Row>
+										<Col>
+											<Form.Label>Up State Payoff (Gross)</Form.Label>
+											<InputGroup>
+												<InputGroup.Text>$</InputGroup.Text>
+												<Form.Control disabled value={callXu} />
+											</InputGroup>
+										</Col>
+										<Col>
+											<Form.Label>Down State Payoff (Gross)</Form.Label>
+											<InputGroup>
+												<InputGroup.Text>$</InputGroup.Text>
+												<Form.Control disabled value={callXd} />
+											</InputGroup>
+										</Col>
+									</Row>
+									<Col>
+										<Form.Label>Call Price</Form.Label>
+										<InputGroup>
+											<InputGroup.Text>$</InputGroup.Text>
+											<Form.Control disabled value={callPriceRNP} />
+										</InputGroup>
+									</Col>
+								</Col>
+								<Col>
+									<p></p>
+									<h2>Put Output</h2>
+									<Row>
+										<Col>
+											<Form.Label>Up State Payoff (Gross)</Form.Label>
+											<InputGroup>
+												<InputGroup.Text>$</InputGroup.Text>
+												<Form.Control disabled value={putXu} />
+											</InputGroup>
+										</Col>
+										<Col>
+											<Form.Label>Down State Payoff (Gross)</Form.Label>
+											<InputGroup>
+												<InputGroup.Text>$</InputGroup.Text>
+												<Form.Control disabled value={putXd} />
+											</InputGroup>
+										</Col>
+									</Row>
+									<Col>
+										<Form.Label>Put Price</Form.Label>
+										<InputGroup>
+											<InputGroup.Text>$</InputGroup.Text>
+											<Form.Control disabled value={putPriceRNP} />
+										</InputGroup>
+									</Col>
+								</Col>
+							</Row>
+						</Row>
+					)}{' '}
+				</Container>
 			) : (
-				<Row>
-					<p></p>
-					<h1>{solverMethods.rnp}</h1>
-					{/* CALL */}
-					<Row>
-						<Col>
-							<Form.Label>q</Form.Label>
-							<InputGroup>
-								<Form.Control disabled value={q} />
-							</InputGroup>
-						</Col>
-						<Col>
-							<Form.Label>1-q</Form.Label>
-							<InputGroup>
-								<Form.Control disabled value={1 - q} />
-							</InputGroup>
-						</Col>
-					</Row>
-					<Row>
-						<Col>
-							<p></p>
-							<h2>Call Output</h2>
-							<Row>
-								<Col>
-									<Form.Label>Up State Payoff (Gross)</Form.Label>
-									<InputGroup>
-										<InputGroup.Text>$</InputGroup.Text>
-										<Form.Control disabled value={callXu} />
-									</InputGroup>
-								</Col>
-								<Col>
-									<Form.Label>Down State Payoff (Gross)</Form.Label>
-									<InputGroup>
-										<InputGroup.Text>$</InputGroup.Text>
-										<Form.Control disabled value={callXd} />
-									</InputGroup>
-								</Col>
-							</Row>
-							<Col>
-								<Form.Label>Call Price</Form.Label>
-								<InputGroup>
-									<InputGroup.Text>$</InputGroup.Text>
-									<Form.Control disabled value={callPriceRNP} />
-								</InputGroup>
-							</Col>
-						</Col>
-						<Col>
-							<p></p>
-							<h2>Put Output</h2>
-							<Row>
-								<Col>
-									<Form.Label>Up State Payoff (Gross)</Form.Label>
-									<InputGroup>
-										<InputGroup.Text>$</InputGroup.Text>
-										<Form.Control disabled value={putXu} />
-									</InputGroup>
-								</Col>
-								<Col>
-									<Form.Label>Down State Payoff (Gross)</Form.Label>
-									<InputGroup>
-										<InputGroup.Text>$</InputGroup.Text>
-										<Form.Control disabled value={putXd} />
-									</InputGroup>
-								</Col>
-							</Row>
-							<Col>
-								<Form.Label>Put Price</Form.Label>
-								<InputGroup>
-									<InputGroup.Text>$</InputGroup.Text>
-									<Form.Control disabled value={putPriceRNP} />
-								</InputGroup>
-							</Col>
-						</Col>
-					</Row>
-				</Row>
+				<MultiStepBinModel />
 			)}
 		</Container>
 	);
