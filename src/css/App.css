@@ -28,7 +28,7 @@ a:link.linkHover, a:visited.linkHover {
 }
 
 a:hover.linkHover, a:active.linkHover {
-  background-color: rgba(205, 205, 205, 0.5);
+  background-color: #cdcdcd80;
   border-radius: 10px;
   text-decoration: none;
 }
