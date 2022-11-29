@@ -4,18 +4,19 @@ export default class Node {
 	upChild;
 	downChild;
 	Xc;
-	Xd;
-	callPrice;
-	putPrice;
+	Xp;
+	level;
 
-	constructor(parent, spot) {
+	constructor(parent, spot, level) {
 		this.parent = parent;
 		this.spot = spot;
+		this.level = level;
 	}
 
 	createChildren(u, d) {
-		this.upChild = new Node(this, this.spot * u);
-		this.downChild = new Node(this, this.spot * d);
+		this.upChild = new Node(this, this.spot * u, this.level + 1);
+		this.downChild = new Node(this, this.spot * d, this.level + 1);
+		// console.log(this.downChild.spot);
 	}
 
 	calcPayoffs(strike) {
@@ -24,19 +25,7 @@ export default class Node {
 	}
 
 	calcOptionPrices(q, r) {
-		if (this.upChild !== null && this.downChild !== null) {
-			// all steps but the last step
-			this.callPrice = (1 / r) * (q * this.upChild.callPrice + (1 - q) * this.downChild.callPrice);
-			this.putPrice = (1 / r) * (q * this.upChild.putPrice + (1 - q) * this.downChild.putPrice);
-		} else if (
-			this.upChild.callPrice === null &&
-			this.downChild.callPrice === null &&
-			this.upChild.putPrice === null &&
-			this.downChild.putPrice === null
-		) {
-			// the last step where there are children, but no option prices
-			this.callPrice = (1 / r) * (q * this.upChild.Xc + (1 - q) * this.downChild.Xc);
-			this.putPrice = (1 / r) * (q * this.upChild.Xp + (1 - q) * this.downChild.Xp);
-		}
+		this.Xc = (1 / r) * (q * this.upChild.Xc + (1 - q) * this.downChild.Xc);
+		this.Xp = (1 / r) * (q * this.upChild.Xp + (1 - q) * this.downChild.Xp);
 	}
 }
