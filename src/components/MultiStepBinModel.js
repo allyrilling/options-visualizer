@@ -11,8 +11,8 @@ export default function MultiStepBinModel() {
 	const [R, setR] = useState(1.02);
 	const [steps, setSteps] = useState(1);
 	const [q, setQ] = useState(0.4000000000000001);
-	const [callPrice, setCallPrice] = useState(-1);
-	const [putPrice, setPutPrice] = useState(-1);
+	const [callPrice, setCallPrice] = useState(3.921568627450981);
+	const [putPrice, setPutPrice] = useState(11.764705882352937);
 
 	let model = new Node(null, S, 0);
 	let currentNode = model;
@@ -31,7 +31,7 @@ export default function MultiStepBinModel() {
 		currentNode.calcOptionPrices(q, R);
 	}
 
-	function calcQ() {
+	function calcQ(R, uParam, dParam) {
 		return (R - dParam) / (uParam - dParam);
 	}
 
@@ -76,7 +76,9 @@ export default function MultiStepBinModel() {
 						<Form.Control
 							value={uParam}
 							onChange={(event) => {
-								setuParam(event.target.value);
+								let newVal = event.target.value;
+								setuParam(newVal);
+								setQ(calcQ(R, newVal, dParam));
 							}}
 						/>
 					</InputGroup>
@@ -87,7 +89,9 @@ export default function MultiStepBinModel() {
 						<Form.Control
 							value={dParam}
 							onChange={(event) => {
-								setdParam(event.target.value);
+								let newVal = event.target.value;
+								setdParam(newVal);
+								setQ(calcQ(R, uParam, newVal));
 							}}
 						/>
 					</InputGroup>
@@ -98,7 +102,9 @@ export default function MultiStepBinModel() {
 						<Form.Control
 							value={R}
 							onChange={(event) => {
-								setR(event.target.value);
+								let newVal = event.target.value;
+								setR(newVal);
+								setQ(calcQ(newVal, uParam, dParam));
 							}}
 						/>
 					</InputGroup>
@@ -123,7 +129,7 @@ export default function MultiStepBinModel() {
 						onClick={async () => {
 							model = new Node(null, S, 0);
 							currentNode = model;
-							setQ(calcQ());
+							// setQ(calcQ());
 							await handleClick();
 							// todo only correct if i click button twice
 						}}
