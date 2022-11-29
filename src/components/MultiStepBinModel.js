@@ -129,9 +129,7 @@ export default function MultiStepBinModel() {
 						onClick={async () => {
 							model = new Node(null, S, 0);
 							currentNode = model;
-							// setQ(calcQ());
 							await handleClick();
-							// todo only correct if i click button twice
 						}}
 					>
 						Calculate Model
