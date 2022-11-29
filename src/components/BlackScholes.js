@@ -1,7 +1,6 @@
 import React from 'react';
 import { Col, Container, Row, Form, InputGroup, Button } from 'react-bootstrap';
 import { useState } from 'react';
-// import jStat from 'cdn.jsdelivr.net/npm/jstat@latest/dist/jstat.min.js';
 var { jStat } = require('jstat');
 
 export default function BlackScholes() {
@@ -26,8 +25,6 @@ export default function BlackScholes() {
 	}
 
 	function doCalcs() {
-		// let R = this.R / 100;
-		// let sigma = this.sigma / 100;
 		let r = R / 100;
 		let sig = sigma / 100;
 		d1 = (1 / (sig * Math.sqrt(T))) * (Math.log(S / K) + (r + 0.5 * sig ** 2) * T);
