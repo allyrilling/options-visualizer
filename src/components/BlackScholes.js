@@ -108,7 +108,7 @@ export default function BlackScholes() {
 					</InputGroup>
 				</Col>
 				<Col>
-					<Form.Label>Sigma / Volitility</Form.Label>
+					<Form.Label>Sigma / Volatility</Form.Label>
 					<InputGroup>
 						<Form.Control
 							value={sigma}
@@ -121,7 +121,7 @@ export default function BlackScholes() {
 					</InputGroup>
 				</Col>
 				<Col>
-					<Form.Label>Dividend Yield (Continuously-Compounded)</Form.Label>
+					<Form.Label>Dividend Yield</Form.Label>
 					<InputGroup>
 						<Form.Control
 							value={divYield}

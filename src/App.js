@@ -7,6 +7,7 @@ import Footer from './components/Footer';
 import Home from './components/Home';
 import BlackScholes from './components/BlackScholes';
 import BinModel from './components/BinModel';
+import TVM from './components/TVM';
 
 function App() {
 	return (
@@ -18,6 +19,7 @@ function App() {
 					<Routes>
 						<Route exact path='/' element={<Home />} />
 						<Route exact path='/home' element={<Home />} />
+						<Route exact path='/tvm' element={<TVM />} />
 						<Route exact path='/options-visualizer' element={<OptionVis />} />
 						<Route exact path='/binomial-model' element={<BinModel />} />
 						<Route exact path='/black-scholes-model' element={<BlackScholes />} />

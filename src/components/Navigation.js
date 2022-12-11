@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Nav, Navbar, Container } from 'react-bootstrap';
+import { Nav, Navbar, Container, NavDropdown } from 'react-bootstrap';
 import '../css/Navigation.css';
 import ftlogo from '../images/ftLogo.png';
 
@@ -15,6 +15,9 @@ function Navigation(props) {
 				<Navbar.Toggle aria-controls='responsive-navbar-nav' />
 				<Navbar.Collapse id='responsive-navbar-nav'>
 					<Nav className='ml-auto'>
+						<Nav.Link className='linkHover' onClick={() => navigate('/tvm')}>
+							TVM Calculator
+						</Nav.Link>
 						<Nav.Link className='linkHover' onClick={() => navigate('/options-visualizer')}>
 							Options Visualizer
 						</Nav.Link>
