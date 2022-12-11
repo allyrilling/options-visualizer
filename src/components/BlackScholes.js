@@ -1,6 +1,7 @@
 import React from 'react';
-import { Col, Container, Row, Form, InputGroup, Button } from 'react-bootstrap';
+import { Col, Container, Row, Form, InputGroup, Button, ButtonGroup } from 'react-bootstrap';
 import { useState } from 'react';
+import { calcImpliedVolCall } from '../logic/ImpliedVolatility';
 var { jStat } = require('jstat');
 
 export default function BlackScholes() {
@@ -9,7 +10,7 @@ export default function BlackScholes() {
 	const [sigma, setSigma] = useState(20);
 	const [T, setT] = useState(1);
 	const [R, setR] = useState(2);
-	const [divYield, setDivYield] = useState(0);
+	const [DY, setDY] = useState(0);
 
 	const [d1, setd1] = useState(0);
 	const [d2, setd2] = useState(0);
@@ -21,6 +22,8 @@ export default function BlackScholes() {
 	const [driftTerm, setDriftTerm] = useState(0);
 	const [callPrice, setCallPrice] = useState(0);
 	const [putPrice, setPutPrice] = useState(0);
+
+	const [mode, setMode] = useState(true);
 
 	const timeUnits = {
 		years: 'Years',
@@ -35,10 +38,10 @@ export default function BlackScholes() {
 		return cumulative ? jStat.normal.cdf(x, mean, sd) : jStat.normal.pdf(x, mean, sd);
 	}
 
-	function doCalcs() {
+	function calcPrices() {
 		let r = R / 100;
 		let sig = sigma / 100;
-		let dy = divYield / 100;
+		let dy = DY / 100;
 		let d1 = (1 / (sig * Math.sqrt(T))) * (Math.log(S / K) + (r - dy + 0.5 * sig ** 2) * T);
 		let d2 = d1 - sig * Math.sqrt(T);
 		let pvK = K * Math.E ** (-r * T);
@@ -62,6 +65,17 @@ export default function BlackScholes() {
 
 		setCallPrice(c);
 		setPutPrice(p);
+	}
+
+	function handle() {
+		let r = R / 100;
+		let sig = sigma / 100;
+		let dy = DY / 100;
+		if (mode) {
+			calcPrices();
+		} else {
+			setSigma(calcImpliedVolCall(callPrice, S, K, r, dy, T) * 100);
+		}
 	}
 
 	function handleTimeUnitChange(e) {
@@ -91,6 +105,15 @@ export default function BlackScholes() {
 
 	return (
 		<Container>
+			<ButtonGroup>
+				<Button variant={mode ? 'danger' : 'secondary'} onClick={() => setMode(true)}>
+					Prices
+				</Button>
+				<Button variant={!mode ? 'danger' : 'secondary'} onClick={() => setMode(false)}>
+					Implied Volatility
+				</Button>
+			</ButtonGroup>
+			<p></p>
 			<h1>Black-Scholes Model</h1>
 			<p></p>
 			<h2>Inputs</h2>
@@ -108,9 +131,10 @@ export default function BlackScholes() {
 					</InputGroup>
 				</Col>
 				<Col>
-					<Form.Label>Sigma / Volatility</Form.Label>
+					<Form.Label>{mode ? 'Sigma / Volatility' : 'Implied Volatility'}</Form.Label>
 					<InputGroup>
 						<Form.Control
+							disabled={!mode}
 							value={sigma}
 							onChange={(event) => {
 								let newVal = event.target.value;
@@ -124,10 +148,10 @@ export default function BlackScholes() {
 					<Form.Label>Dividend Yield</Form.Label>
 					<InputGroup>
 						<Form.Control
-							value={divYield}
+							value={DY}
 							onChange={(event) => {
 								let newVal = event.target.value;
-								setDivYield(newVal);
+								setDY(newVal);
 							}}
 						/>
 						<InputGroup.Text>%</InputGroup.Text>
@@ -187,7 +211,7 @@ export default function BlackScholes() {
 					<Button
 						variant='danger'
 						onClick={() => {
-							doCalcs();
+							handle();
 						}}
 					>
 						Calculate Model
@@ -257,7 +281,7 @@ export default function BlackScholes() {
 				<Col>
 					<Form.Label>Call Price</Form.Label>
 					<InputGroup>
-						<Form.Control disabled value={callPrice} />
+						<Form.Control disabled={mode} value={callPrice} />
 					</InputGroup>
 				</Col>
 				<Col>
