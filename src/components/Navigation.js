@@ -6,6 +6,19 @@ import ftlogo from '../images/ftLogo.png';
 
 function Navigation(props) {
 	const navigate = useNavigate();
+
+	const tabs = {
+		tvm: 'TVM Calculator',
+		ov: 'Options Visualizer',
+		bm: 'Binomial Model',
+		bsm: 'Black-Scholes Model',
+	};
+
+	const bsmTabs = {
+		prices: 'Option Prices',
+		iv: 'Implied Volatility',
+	};
+
 	return (
 		<Navbar collapseOnSelect expand='sm'>
 			<Container>
@@ -16,17 +29,29 @@ function Navigation(props) {
 				<Navbar.Collapse id='responsive-navbar-nav'>
 					<Nav className='ml-auto'>
 						<Nav.Link className='linkHover' onClick={() => navigate('/tvm')}>
-							TVM Calculator
+							{tabs.tvm}
 						</Nav.Link>
 						<Nav.Link className='linkHover' onClick={() => navigate('/options-visualizer')}>
-							Options Visualizer
+							{tabs.ov}
 						</Nav.Link>
 						<Nav.Link className='linkHover' onClick={() => navigate('/binomial-model')}>
-							Binomial Model
+							{tabs.bm}
 						</Nav.Link>
-						<Nav.Link className='linkHover' onClick={() => navigate('/black-scholes-model')}>
-							Black-Scholes Model
-						</Nav.Link>
+						{/* <Nav.Link className='linkHover' onClick={() => navigate('/black-scholes-model')}>
+							{tabs.bsm}
+						</Nav.Link> */}
+						<NavDropdown title={tabs.bsm}>
+							<NavDropdown.Item>
+								<Nav.Link className='linkHover' onClick={() => navigate('/bsm-prices')}>
+									{bsmTabs.prices}
+								</Nav.Link>
+							</NavDropdown.Item>
+							<NavDropdown.Item>
+								<Nav.Link className='linkHover' onClick={() => navigate('/bsm-implied-vol')}>
+									{bsmTabs.iv}
+								</Nav.Link>
+							</NavDropdown.Item>
+						</NavDropdown>
 					</Nav>
 				</Navbar.Collapse>
 			</Container>

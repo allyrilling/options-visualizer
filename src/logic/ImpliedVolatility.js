@@ -45,18 +45,6 @@ function vega(S, sigma, K, T, R, DY) {
 	return vega;
 }
 
-export function calcImpliedVolCall(C, S, K, R, DY, T) {
-	let x0 = inflectionPoint(S, K, T, R);
-	let bsC = calcBSPrice(S, K, x0, DY, R, T, true);
-	let v = vega(S, x0, K, T, R, DY);
-	while (Math.abs((bsC - C) / v) > tolerance) {
-		x0 = x0 - (bsC - C) / v;
-		bsC = calcBSPrice(S, K, x0, DY, R, T, true);
-		v = vega(S, x0, K, T, R, DY);
-	}
-	return x0;
-}
-
 export function calcImpliedVol(C, S, K, R, DY, T, isCall) {
 	let x0 = inflectionPoint(S, K, T, R);
 	let bsPrice = calcBSPrice(S, K, x0, DY, R, T, isCall);
