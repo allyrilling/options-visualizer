@@ -114,7 +114,6 @@ export default function TVM() {
 			<p></p>
 			<Row>
 				<Col>
-					// todo for some reason fv blows up when you click it a bunch
 					<Form.Label>Present Value</Form.Label>
 					<InputGroup>
 						<InputGroup.Text>$</InputGroup.Text>

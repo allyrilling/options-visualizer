@@ -1,8 +1,7 @@
 import React from 'react';
-import { Col, Container, Row, Form, InputGroup, Button, ButtonGroup } from 'react-bootstrap';
+import { Col, Container, Row, Form, InputGroup, Button } from 'react-bootstrap';
 import { useState } from 'react';
-import { calcImpliedVol } from '../logic/ImpliedVolatility';
-var { jStat } = require('jstat');
+import * as bsl from '../logic/BlackScholesLib';
 
 export default function BlackScholesPrices() {
 	const [S, setS] = useState(100);
@@ -23,14 +22,6 @@ export default function BlackScholesPrices() {
 	const [callPrice, setCallPrice] = useState(0);
 	const [putPrice, setPutPrice] = useState(0);
 
-	const modes = {
-		prices: 'Prices',
-		ivC: 'IV - Call',
-		ivP: 'IV - Put',
-	};
-
-	const [mode, setMode] = useState(modes.prices);
-
 	const timeUnits = {
 		years: 'Years',
 		months: 'Months -> Years',
@@ -40,50 +31,25 @@ export default function BlackScholesPrices() {
 	};
 	const [timeUnit, setTimeUnit] = useState(timeUnits.years);
 
-	function NORMDIST(x, mean, sd, cumulative) {
-		return cumulative ? jStat.normal.cdf(x, mean, sd) : jStat.normal.pdf(x, mean, sd);
-	}
-
-	function calcPrices() {
+	function handleCalcModel() {
 		let r = R / 100;
 		let sig = sigma / 100;
 		let dy = DY / 100;
-		let d1 = (1 / (sig * Math.sqrt(T))) * (Math.log(S / K) + (r - dy + 0.5 * sig ** 2) * T);
-		let d2 = d1 - sig * Math.sqrt(T);
-		let pvK = K * Math.E ** (-r * T);
-		let Nd1 = NORMDIST(d1, 0, 1, true);
-		let Nd2 = NORMDIST(d2, 0, 1, true);
-		let negNd1 = 1 - Nd1;
-		let negNd2 = 1 - Nd2;
 
-		setDriftTerm((r - dy + 0.5 * sig ** 2) * T); // ! idk what drift term should really be, is T included or no?
+		let ds = bsl.calcDs(S, K, sig, dy, r, T);
 
-		setd1(d1);
-		setd2(d2);
-		setNd1(Nd1);
-		setNd2(Nd2);
-		setpvK(pvK);
-		setNegNd1(negNd1);
-		setNegNd2(negNd2);
+		setd1(ds[0]);
+		setd2(ds[1]);
+		setNd1(ds[2]);
+		setNd2(ds[3]);
+		setNegNd1(ds[4]);
+		setNegNd2(ds[5]);
 
-		let c = S * Math.E ** (-dy * T) * Nd1 - pvK * Nd2;
-		let p = pvK * negNd2 - S * Math.E ** (-dy * T) * negNd1;
+		setpvK(bsl.calcPVK(K, r, T));
+		setDriftTerm(bsl.calcDriftTerm(sig, r, dy, T));
 
-		setCallPrice(c);
-		setPutPrice(p);
-	}
-
-	function handle() {
-		let r = R / 100;
-		let sig = sigma / 100;
-		let dy = DY / 100;
-		if (mode === modes.prices) {
-			calcPrices();
-		} else if (mode === modes.ivC) {
-			setSigma(calcImpliedVol(callPrice, S, K, r, dy, T, true) * 100);
-		} else if (mode === modes.ivP) {
-			setSigma(calcImpliedVol(putPrice, S, K, r, dy, T, false) * 100);
-		}
+		setCallPrice(bsl.calcBSPrice(S, K, sig, dy, r, T, true));
+		setPutPrice(bsl.calcBSPrice(S, K, sig, dy, r, T, false));
 	}
 
 	function handleTimeUnitChange(e) {
@@ -113,18 +79,6 @@ export default function BlackScholesPrices() {
 
 	return (
 		<Container>
-			<ButtonGroup>
-				<Button variant={mode === modes.prices ? 'danger' : 'secondary'} onClick={() => setMode(modes.prices)}>
-					{modes.prices}
-				</Button>
-				<Button variant={mode === modes.ivC ? 'danger' : 'secondary'} onClick={() => setMode(modes.ivC)}>
-					{modes.ivC}
-				</Button>
-				<Button variant={mode === modes.ivP ? 'danger' : 'secondary'} onClick={() => setMode(modes.ivP)}>
-					{modes.ivP}
-				</Button>
-			</ButtonGroup>
-			<p></p>
 			<h1>Black-Scholes Model</h1>
 			<p></p>
 			<h2>Inputs</h2>
@@ -142,10 +96,9 @@ export default function BlackScholesPrices() {
 					</InputGroup>
 				</Col>
 				<Col>
-					<Form.Label>{mode ? 'Sigma / Volatility' : 'Implied Volatility'}</Form.Label>
+					<Form.Label>Sigma / Volatility</Form.Label>
 					<InputGroup>
 						<Form.Control
-							disabled={mode !== modes.prices}
 							value={sigma}
 							onChange={(event) => {
 								let newVal = event.target.value;
@@ -222,7 +175,7 @@ export default function BlackScholesPrices() {
 					<Button
 						variant='danger'
 						onClick={() => {
-							handle();
+							handleCalcModel();
 						}}
 					>
 						Calculate Model
@@ -292,25 +245,13 @@ export default function BlackScholesPrices() {
 				<Col>
 					<Form.Label>Call Price</Form.Label>
 					<InputGroup>
-						<Form.Control
-							disabled={mode !== modes.ivC}
-							value={callPrice}
-							onChange={(event) => {
-								setCallPrice(event.target.value);
-							}}
-						/>
+						<Form.Control disabled value={callPrice} />
 					</InputGroup>
 				</Col>
 				<Col>
 					<Form.Label>Put Price</Form.Label>
 					<InputGroup>
-						<Form.Control
-							disabled={mode !== modes.ivP}
-							value={putPrice}
-							onChange={(event) => {
-								setPutPrice(event.target.value);
-							}}
-						/>
+						<Form.Control disabled value={putPrice} />
 					</InputGroup>
 				</Col>
 			</Row>
