@@ -114,6 +114,7 @@ export default function BlackScholesIV() {
 				<Col>
 					<Form.Label>{mode === modes.ivC ? 'Call Price' : 'Put Price'}</Form.Label>
 					<InputGroup>
+						<InputGroup.Text>$</InputGroup.Text>
 						{mode === modes.ivC ? (
 							<Form.Control
 								value={callPrice}
@@ -215,20 +216,24 @@ export default function BlackScholesIV() {
 			</Row>
 			<p></p>
 			<h2>Outputs</h2>
-			<Col>
-				<Form.Label>Implied Volatility</Form.Label>
-				<InputGroup>
-					<Form.Control
-						disabled
-						value={sigma}
-						onChange={(event) => {
-							let newVal = event.target.value;
-							setSigma(newVal);
-						}}
-					/>
-					<InputGroup.Text>%</InputGroup.Text>
-				</InputGroup>
-			</Col>
+			<Row>
+				<Col>
+					<Form.Label>Implied Volatility</Form.Label>
+					<InputGroup>
+						<Form.Control
+							disabled
+							value={sigma}
+							onChange={(event) => {
+								let newVal = event.target.value;
+								setSigma(newVal);
+							}}
+						/>
+						<InputGroup.Text>%</InputGroup.Text>
+					</InputGroup>
+				</Col>
+				<Col></Col>
+				<Col></Col>
+			</Row>
 		</Container>
 	);
 }

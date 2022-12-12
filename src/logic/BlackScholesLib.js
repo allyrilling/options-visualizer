@@ -16,6 +16,10 @@ export function calcPVK(K, R, T) {
 	return K * Math.E ** (-R * T);
 }
 
+export function calcPVS(S, DY, T) {
+	return S * Math.E ** (-DY * T);
+}
+
 export function calcNds(d1, d2) {
 	let Nd1 = NORMDIST(d1, 0, 1, true);
 	let Nd2 = NORMDIST(d2, 0, 1, true);
@@ -40,16 +44,17 @@ export function calcBSPrice(S, K, sigma, DY, R, T, isCall) {
 	let d1 = calcD1(S, K, sigma, DY, R, T);
 	let d2 = calcD2(d1, sigma, T);
 	let pvK = calcPVK(K, R, T);
+	let pvS = calcPVS(S, DY, T);
 	let Nd1 = NORMDIST(d1, 0, 1, true);
 	let Nd2 = NORMDIST(d2, 0, 1, true);
 	let negNd1 = 1 - Nd1;
 	let negNd2 = 1 - Nd2;
 
 	if (isCall) {
-		let callPrice = S * Math.E ** (-DY * T) * Nd1 - pvK * Nd2;
+		let callPrice = pvS * Nd1 - pvK * Nd2;
 		return callPrice;
 	} else {
-		let putPrice = pvK * negNd2 - S * Math.E ** (-DY * T) * negNd1;
+		let putPrice = pvK * negNd2 - pvS * negNd1;
 		return putPrice;
 	}
 }

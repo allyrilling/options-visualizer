@@ -18,6 +18,7 @@ export default function BlackScholesPrices() {
 	const [negNd1, setNegNd1] = useState(0);
 	const [negNd2, setNegNd2] = useState(0);
 	const [pvK, setpvK] = useState(0);
+	const [pvS, setpvS] = useState(0);
 	const [driftTerm, setDriftTerm] = useState(0);
 	const [callPrice, setCallPrice] = useState(0);
 	const [putPrice, setPutPrice] = useState(0);
@@ -46,6 +47,7 @@ export default function BlackScholesPrices() {
 		setNegNd2(ds[5]);
 
 		setpvK(bsl.calcPVK(K, r, T));
+		setpvS(bsl.calcPVS(S, dy, T));
 		setDriftTerm(bsl.calcDriftTerm(sig, r, dy, T));
 
 		setCallPrice(bsl.calcBSPrice(S, K, sig, dy, r, T, true));
@@ -231,6 +233,12 @@ export default function BlackScholesPrices() {
 					<Form.Label>PV(K)</Form.Label>
 					<InputGroup>
 						<Form.Control disabled value={pvK} />
+					</InputGroup>
+				</Col>
+				<Col>
+					<Form.Label>PV(S)</Form.Label>
+					<InputGroup>
+						<Form.Control disabled value={pvS} />
 					</InputGroup>
 				</Col>
 				<Col>

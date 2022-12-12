@@ -29,10 +29,6 @@ add dropdowns to menubar for single and multistep bin model
 
 ## Black Scholes
 
-add special k to outputs
-
-bs model add "rounded" checkbox option to round answers to 4 dec places
-
 drift term should be a percent
 - drift term is maybe wo *t?
 

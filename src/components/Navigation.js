@@ -25,7 +25,7 @@ function Navigation(props) {
 				<Navbar.Brand className='align-center' style={{ fontSize: '30px', fontWeight: 'bold', color: 'red' }} onClick={() => navigate('/home')}>
 					<img src={ftlogo} className='navImg'></img>
 				</Navbar.Brand>
-				<Navbar.Toggle aria-controls='responsive-navbar-nav' />
+				<Navbar.Toggle />
 				<Navbar.Collapse id='responsive-navbar-nav'>
 					<Nav className='ml-auto'>
 						<Nav.Link className='linkHover' onClick={() => navigate('/tvm')}>
@@ -41,15 +41,11 @@ function Navigation(props) {
 							{tabs.bsm}
 						</Nav.Link> */}
 						<NavDropdown title={tabs.bsm}>
-							<NavDropdown.Item>
-								<Nav.Link className='linkHover' onClick={() => navigate('/bsm-prices')}>
-									{bsmTabs.prices}
-								</Nav.Link>
+							<NavDropdown.Item className='linkHover'>
+								<Nav.Link onClick={() => navigate('/bsm-prices')}>{bsmTabs.prices}</Nav.Link>
 							</NavDropdown.Item>
-							<NavDropdown.Item>
-								<Nav.Link className='linkHover' onClick={() => navigate('/bsm-implied-vol')}>
-									{bsmTabs.iv}
-								</Nav.Link>
+							<NavDropdown.Item className='linkHover'>
+								<Nav.Link onClick={() => navigate('/bsm-implied-vol')}>{bsmTabs.iv}</Nav.Link>
 							</NavDropdown.Item>
 						</NavDropdown>
 					</Nav>
