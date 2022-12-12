@@ -5,7 +5,8 @@ import OptionVis from './components/OptionsVis.js';
 import Navigation from './components/Navigation';
 import Footer from './components/Footer';
 import Home from './components/Home';
-import BlackScholes from './components/BlackScholes';
+import BlackScholesPrices from './components/BlackScholesPrices';
+import BlackScholesIV from './components/BlackScholesIV';
 import BinModel from './components/BinModel';
 import TVM from './components/TVM';
 
@@ -23,8 +24,8 @@ function App() {
 						<Route exact path='/options-visualizer' element={<OptionVis />} />
 						<Route exact path='/binomial-model' element={<BinModel />} />
 						{/* <Route exact path='/black-scholes-model' element={<BlackScholes />} /> */}
-						<Route exact path='/bsm-prices' element={<BlackScholes />} />
-						<Route exact path='/bsm-implied-vol' element={<BlackScholes />} />
+						<Route exact path='/bsm-prices' element={<BlackScholesPrices />} />
+						<Route exact path='/bsm-implied-vol' element={<BlackScholesIV />} />
 					</Routes>
 				</div>
 				<div id='footer'>
