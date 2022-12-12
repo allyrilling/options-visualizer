@@ -1,7 +1,7 @@
 import React from 'react';
 import { Col, Container, Row, Form, InputGroup, Button, ButtonGroup } from 'react-bootstrap';
 import { useState } from 'react';
-import { calcImpliedVolCall } from '../logic/ImpliedVolatility';
+import { calcImpliedVol } from '../logic/ImpliedVolatility';
 var { jStat } = require('jstat');
 
 export default function BlackScholes() {
@@ -23,7 +23,13 @@ export default function BlackScholes() {
 	const [callPrice, setCallPrice] = useState(0);
 	const [putPrice, setPutPrice] = useState(0);
 
-	const [mode, setMode] = useState(true);
+	const modes = {
+		prices: 'Prices',
+		ivC: 'IV - Call',
+		ivP: 'IV - Put',
+	};
+
+	const [mode, setMode] = useState(modes.prices);
 
 	const timeUnits = {
 		years: 'Years',
@@ -71,10 +77,12 @@ export default function BlackScholes() {
 		let r = R / 100;
 		let sig = sigma / 100;
 		let dy = DY / 100;
-		if (mode) {
+		if (mode === modes.prices) {
 			calcPrices();
-		} else {
-			setSigma(calcImpliedVolCall(callPrice, S, K, r, dy, T) * 100);
+		} else if (mode === modes.ivC) {
+			setSigma(calcImpliedVol(callPrice, S, K, r, dy, T, true) * 100);
+		} else if (mode === modes.ivP) {
+			setSigma(calcImpliedVol(putPrice, S, K, r, dy, T, false) * 100);
 		}
 	}
 
@@ -106,11 +114,14 @@ export default function BlackScholes() {
 	return (
 		<Container>
 			<ButtonGroup>
-				<Button variant={mode ? 'danger' : 'secondary'} onClick={() => setMode(true)}>
-					Prices
+				<Button variant={mode === modes.prices ? 'danger' : 'secondary'} onClick={() => setMode(modes.prices)}>
+					{modes.prices}
 				</Button>
-				<Button variant={!mode ? 'danger' : 'secondary'} onClick={() => setMode(false)}>
-					Implied Volatility
+				<Button variant={mode === modes.ivC ? 'danger' : 'secondary'} onClick={() => setMode(modes.ivC)}>
+					{modes.ivC}
+				</Button>
+				<Button variant={mode === modes.ivP ? 'danger' : 'secondary'} onClick={() => setMode(modes.ivP)}>
+					{modes.ivP}
 				</Button>
 			</ButtonGroup>
 			<p></p>
@@ -134,7 +145,7 @@ export default function BlackScholes() {
 					<Form.Label>{mode ? 'Sigma / Volatility' : 'Implied Volatility'}</Form.Label>
 					<InputGroup>
 						<Form.Control
-							disabled={!mode}
+							disabled={mode !== modes.prices}
 							value={sigma}
 							onChange={(event) => {
 								let newVal = event.target.value;
@@ -281,13 +292,25 @@ export default function BlackScholes() {
 				<Col>
 					<Form.Label>Call Price</Form.Label>
 					<InputGroup>
-						<Form.Control disabled={mode} value={callPrice} />
+						<Form.Control
+							disabled={mode !== modes.ivC}
+							value={callPrice}
+							onChange={(event) => {
+								setCallPrice(event.target.value);
+							}}
+						/>
 					</InputGroup>
 				</Col>
 				<Col>
 					<Form.Label>Put Price</Form.Label>
 					<InputGroup>
-						<Form.Control disabled value={putPrice} />
+						<Form.Control
+							disabled={mode !== modes.ivP}
+							value={putPrice}
+							onChange={(event) => {
+								setPutPrice(event.target.value);
+							}}
+						/>
 					</InputGroup>
 				</Col>
 			</Row>
