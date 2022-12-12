@@ -12,24 +12,15 @@ export default function BlackScholesIV() {
 	const [R, setR] = useState(2);
 	const [DY, setDY] = useState(0);
 
-	const [d1, setd1] = useState(0);
-	const [d2, setd2] = useState(0);
-	const [Nd1, setNd1] = useState(0);
-	const [Nd2, setNd2] = useState(0);
-	const [negNd1, setNegNd1] = useState(0);
-	const [negNd2, setNegNd2] = useState(0);
-	const [pvK, setpvK] = useState(0);
-	const [driftTerm, setDriftTerm] = useState(0);
 	const [callPrice, setCallPrice] = useState(0);
 	const [putPrice, setPutPrice] = useState(0);
 
 	const modes = {
-		prices: 'Prices',
 		ivC: 'IV - Call',
 		ivP: 'IV - Put',
 	};
 
-	const [mode, setMode] = useState(modes.prices);
+	const [mode, setMode] = useState(modes.ivC);
 
 	const timeUnits = {
 		years: 'Years',
@@ -55,16 +46,6 @@ export default function BlackScholesIV() {
 		let Nd2 = NORMDIST(d2, 0, 1, true);
 		let negNd1 = 1 - Nd1;
 		let negNd2 = 1 - Nd2;
-
-		setDriftTerm((r - dy + 0.5 * sig ** 2) * T); // ! idk what drift term should really be, is T included or no?
-
-		setd1(d1);
-		setd2(d2);
-		setNd1(Nd1);
-		setNd2(Nd2);
-		setpvK(pvK);
-		setNegNd1(negNd1);
-		setNegNd2(negNd2);
 
 		let c = S * Math.E ** (-dy * T) * Nd1 - pvK * Nd2;
 		let p = pvK * negNd2 - S * Math.E ** (-dy * T) * negNd1;
@@ -113,18 +94,6 @@ export default function BlackScholesIV() {
 
 	return (
 		<Container>
-			<ButtonGroup>
-				<Button variant={mode === modes.prices ? 'danger' : 'secondary'} onClick={() => setMode(modes.prices)}>
-					{modes.prices}
-				</Button>
-				<Button variant={mode === modes.ivC ? 'danger' : 'secondary'} onClick={() => setMode(modes.ivC)}>
-					{modes.ivC}
-				</Button>
-				<Button variant={mode === modes.ivP ? 'danger' : 'secondary'} onClick={() => setMode(modes.ivP)}>
-					{modes.ivP}
-				</Button>
-			</ButtonGroup>
-			<p></p>
 			<h1>Black-Scholes Model</h1>
 			<p></p>
 			<h2>Inputs</h2>
@@ -141,18 +110,33 @@ export default function BlackScholesIV() {
 						/>
 					</InputGroup>
 				</Col>
+
 				<Col>
-					<Form.Label>{mode ? 'Sigma / Volatility' : 'Implied Volatility'}</Form.Label>
+					<Form.Label>{mode === modes.ivC ? 'Call Price' : 'Put Price'}</Form.Label>
 					<InputGroup>
-						<Form.Control
-							disabled={mode !== modes.prices}
-							value={sigma}
-							onChange={(event) => {
-								let newVal = event.target.value;
-								setSigma(newVal);
-							}}
-						/>
-						<InputGroup.Text>%</InputGroup.Text>
+						{mode === modes.ivC ? (
+							<Form.Control
+								value={callPrice}
+								onChange={(event) => {
+									setCallPrice(event.target.value);
+								}}
+							/>
+						) : (
+							<Form.Control
+								value={putPrice}
+								onChange={(event) => {
+									setPutPrice(event.target.value);
+								}}
+							/>
+						)}
+						<ButtonGroup>
+							<Button variant={mode === modes.ivC ? 'danger' : 'secondary'} onClick={() => setMode(modes.ivC)}>
+								{modes.ivC}
+							</Button>
+							<Button variant={mode === modes.ivP ? 'danger' : 'secondary'} onClick={() => setMode(modes.ivP)}>
+								{modes.ivP}
+							</Button>
+						</ButtonGroup>
 					</InputGroup>
 				</Col>
 				<Col>
@@ -231,89 +215,20 @@ export default function BlackScholesIV() {
 			</Row>
 			<p></p>
 			<h2>Outputs</h2>
-			<Row>
-				<Col>
-					<Form.Label>d1</Form.Label>
-					<InputGroup>
-						<Form.Control disabled value={d1} />
-					</InputGroup>
-				</Col>
-				<Col>
-					<Form.Label>d2</Form.Label>
-					<InputGroup>
-						<Form.Control disabled value={d2} />
-					</InputGroup>
-				</Col>
-			</Row>
-			<p></p>
-			<Row>
-				<Col>
-					<Form.Label>N(d1)</Form.Label>
-					<InputGroup>
-						<Form.Control disabled value={Nd1} />
-					</InputGroup>
-				</Col>
-				<Col>
-					<Form.Label>N(d2)</Form.Label>
-					<InputGroup>
-						<Form.Control disabled value={Nd2} />
-					</InputGroup>
-				</Col>
-				<Col>
-					<Form.Label>N(-d1)</Form.Label>
-					<InputGroup>
-						<Form.Control disabled value={negNd1} />
-					</InputGroup>
-				</Col>
-				<Col>
-					<Form.Label>N(-d2)</Form.Label>
-					<InputGroup>
-						<Form.Control disabled value={negNd2} />
-					</InputGroup>
-				</Col>
-			</Row>
-			<p></p>
-			<Row>
-				<Col>
-					<Form.Label>PV(K)</Form.Label>
-					<InputGroup>
-						<Form.Control disabled value={pvK} />
-					</InputGroup>
-				</Col>
-				<Col>
-					<Form.Label>Drift Term</Form.Label>
-					<InputGroup>
-						<Form.Control disabled value={driftTerm} />
-					</InputGroup>
-				</Col>
-			</Row>
-			<p></p>
-			<Row>
-				<Col>
-					<Form.Label>Call Price</Form.Label>
-					<InputGroup>
-						<Form.Control
-							disabled={mode !== modes.ivC}
-							value={callPrice}
-							onChange={(event) => {
-								setCallPrice(event.target.value);
-							}}
-						/>
-					</InputGroup>
-				</Col>
-				<Col>
-					<Form.Label>Put Price</Form.Label>
-					<InputGroup>
-						<Form.Control
-							disabled={mode !== modes.ivP}
-							value={putPrice}
-							onChange={(event) => {
-								setPutPrice(event.target.value);
-							}}
-						/>
-					</InputGroup>
-				</Col>
-			</Row>
+			<Col>
+				<Form.Label>Implied Volatility</Form.Label>
+				<InputGroup>
+					<Form.Control
+						disabled
+						value={sigma}
+						onChange={(event) => {
+							let newVal = event.target.value;
+							setSigma(newVal);
+						}}
+					/>
+					<InputGroup.Text>%</InputGroup.Text>
+				</InputGroup>
+			</Col>
 		</Container>
 	);
 }
