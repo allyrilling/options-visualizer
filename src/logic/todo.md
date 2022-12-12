@@ -32,7 +32,7 @@ add dropdowns to menubar for single and multistep bin model
 drift term should be a percent
 - drift term is maybe wo *t?
 
-add pv*s to bs outputs
+merge bslib and iv lib
 
 add ability to do cmd+return to calc model 
 

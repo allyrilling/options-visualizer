@@ -81,7 +81,7 @@ export default function BlackScholesPrices() {
 
 	return (
 		<Container>
-			<h1>Black-Scholes Model</h1>
+			<h1>BSM: Option Prices</h1>
 			<p></p>
 			<h2>Inputs</h2>
 			<Row>

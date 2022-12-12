@@ -1,19 +1,19 @@
 import React from 'react';
 import { Col, Container, Row, Form, InputGroup, Button, ButtonGroup } from 'react-bootstrap';
 import { useState } from 'react';
-import { calcImpliedVol } from '../logic/ImpliedVolatility';
+import * as bsl from '../logic/BlackScholesLib';
 var { jStat } = require('jstat');
 
 export default function BlackScholesIV() {
 	const [S, setS] = useState(100);
 	const [K, setK] = useState(110);
-	const [sigma, setSigma] = useState(20);
 	const [T, setT] = useState(1);
 	const [R, setR] = useState(2);
 	const [DY, setDY] = useState(0);
+	const [callPrice, setCallPrice] = useState(4.94);
+	const [putPrice, setPutPrice] = useState(12.77);
 
-	const [callPrice, setCallPrice] = useState(0);
-	const [putPrice, setPutPrice] = useState(0);
+	const [sigma, setSigma] = useState(20);
 
 	const modes = {
 		ivC: 'IV - Call',
@@ -61,9 +61,9 @@ export default function BlackScholesIV() {
 		if (mode === modes.prices) {
 			calcPrices();
 		} else if (mode === modes.ivC) {
-			setSigma(calcImpliedVol(callPrice, S, K, r, dy, T, true) * 100);
+			setSigma(bsl.calcImpliedVol(callPrice, S, K, r, dy, T, true) * 100);
 		} else if (mode === modes.ivP) {
-			setSigma(calcImpliedVol(putPrice, S, K, r, dy, T, false) * 100);
+			setSigma(bsl.calcImpliedVol(putPrice, S, K, r, dy, T, false) * 100);
 		}
 	}
 
@@ -94,7 +94,7 @@ export default function BlackScholesIV() {
 
 	return (
 		<Container>
-			<h1>Black-Scholes Model</h1>
+			<h1>BSM: Implied Volatility</h1>
 			<p></p>
 			<h2>Inputs</h2>
 			<Row>
