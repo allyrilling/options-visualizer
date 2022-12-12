@@ -253,12 +253,14 @@ export default function BlackScholesPrices() {
 				<Col>
 					<Form.Label>Call Price</Form.Label>
 					<InputGroup>
+						<InputGroup.Text>$</InputGroup.Text>
 						<Form.Control disabled value={callPrice} />
 					</InputGroup>
 				</Col>
 				<Col>
 					<Form.Label>Put Price</Form.Label>
 					<InputGroup>
+						<InputGroup.Text>$</InputGroup.Text>
 						<Form.Control disabled value={putPrice} />
 					</InputGroup>
 				</Col>

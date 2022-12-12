@@ -32,13 +32,7 @@ add dropdowns to menubar for single and multistep bin model
 drift term should be a percent
 - drift term is maybe wo *t?
 
-merge bslib and iv lib
-
 add ability to do cmd+return to calc model 
-
-add $ to call price put price outputs in bs
-
-i think the disabled outputs are only valid for PRICES mode, like i dont think they update for the IV modes
 
 ## Scratch
 

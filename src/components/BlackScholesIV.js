@@ -2,7 +2,6 @@ import React from 'react';
 import { Col, Container, Row, Form, InputGroup, Button, ButtonGroup } from 'react-bootstrap';
 import { useState } from 'react';
 import * as bsl from '../logic/BlackScholesLib';
-var { jStat } = require('jstat');
 
 export default function BlackScholesIV() {
 	const [S, setS] = useState(100);
@@ -13,7 +12,7 @@ export default function BlackScholesIV() {
 	const [callPrice, setCallPrice] = useState(4.94);
 	const [putPrice, setPutPrice] = useState(12.77);
 
-	const [sigma, setSigma] = useState(20);
+	const [sigma, setSigma] = useState(0);
 
 	const modes = {
 		ivC: 'IV - Call',
@@ -22,6 +21,7 @@ export default function BlackScholesIV() {
 
 	const [mode, setMode] = useState(modes.ivC);
 
+	// todo move to a centra lib
 	const timeUnits = {
 		years: 'Years',
 		months: 'Months -> Years',
@@ -31,42 +31,18 @@ export default function BlackScholesIV() {
 	};
 	const [timeUnit, setTimeUnit] = useState(timeUnits.years);
 
-	function NORMDIST(x, mean, sd, cumulative) {
-		return cumulative ? jStat.normal.cdf(x, mean, sd) : jStat.normal.pdf(x, mean, sd);
-	}
-
-	function calcPrices() {
-		let r = R / 100;
-		let sig = sigma / 100;
-		let dy = DY / 100;
-		let d1 = (1 / (sig * Math.sqrt(T))) * (Math.log(S / K) + (r - dy + 0.5 * sig ** 2) * T);
-		let d2 = d1 - sig * Math.sqrt(T);
-		let pvK = K * Math.E ** (-r * T);
-		let Nd1 = NORMDIST(d1, 0, 1, true);
-		let Nd2 = NORMDIST(d2, 0, 1, true);
-		let negNd1 = 1 - Nd1;
-		let negNd2 = 1 - Nd2;
-
-		let c = S * Math.E ** (-dy * T) * Nd1 - pvK * Nd2;
-		let p = pvK * negNd2 - S * Math.E ** (-dy * T) * negNd1;
-
-		setCallPrice(c);
-		setPutPrice(p);
-	}
-
 	function handle() {
 		let r = R / 100;
-		let sig = sigma / 100;
 		let dy = DY / 100;
-		if (mode === modes.prices) {
-			calcPrices();
-		} else if (mode === modes.ivC) {
+
+		if (mode === modes.ivC) {
 			setSigma(bsl.calcImpliedVol(callPrice, S, K, r, dy, T, true) * 100);
 		} else if (mode === modes.ivP) {
 			setSigma(bsl.calcImpliedVol(putPrice, S, K, r, dy, T, false) * 100);
 		}
 	}
 
+	// todo move to a centra lib
 	function handleTimeUnitChange(e) {
 		let denominator = 0;
 		switch (e) {
