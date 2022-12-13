@@ -18,7 +18,7 @@ export default function Home() {
 				<Col onClick={() => navigate('/binomial-model')}>
 					<Tool name={'Binomial Model'} icon={bmlogo} description='Calulate option prices using the binomial model.'></Tool>
 				</Col>
-				<Col onClick={() => navigate('/black-scholes-model')}>
+				<Col onClick={() => navigate('/bsm-prices')}>
 					<Tool name={'Black-Scholes Model'} icon={bslogo} description='Calculate option prices using the Black-Scholes model.'></Tool>
 				</Col>
 			</Row>

@@ -1,5 +1,7 @@
 # Todo List
 
+**if stuff breaks, delete the type: module in package json**
+
 ## General
 
 figure out how to switch firebase hosting to new fintools project
@@ -18,6 +20,8 @@ create a library for all calcs
 
 ## Options Visualizer
 
+currently broken, see file for comments on how to fix
+
 add more spreads
 
 ## Binomial Model
@@ -26,6 +30,15 @@ add dividends for multistep bin model
 
 split single step and multi step bin models into two tabs
 add dropdowns to menubar for single and multistep bin model
+
+put call price rounding
+
+greeks
+- delta
+- gamma
+- vega
+- theta
+- rho
 
 ## Black Scholes
 

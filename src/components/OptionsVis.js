@@ -1,10 +1,36 @@
 import '../css/App.css';
-import 'chart.js/auto'; // ADD THIS
+// import 'chart.js/auto'; // ADD THIS
+// import { Chart } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import { Container, Row, Col, Form, InputGroup } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useState } from 'react';
 import Option from '../logic/Option.js';
+
+/*
+! options vis is broken
+
+its broken bc of the canvas rerendering issue
+
+see issue in console
+
+try to solve issue by refactoring this file
+- break into multiple files [logic v ui]
+- create a chart component
+
+i think the issue stems lines of code like this
+<Line id='custom' data={customPortfolioChartData} options={chartOptions('Custom Spread')}></Line>
+
+creating a generic Line component i think makes them all have the same id, and thus conflict on the canvas
+
+i need to make them separately, and make sure that they dont conflift
+
+use this article for reference
+https://blog.bitsrc.io/customizing-chart-js-in-react-2199fa81530a
+
+probs will need to deal with react life cycle, component did mount thing
+
+*/
 
 export default function CreateChart() {
 	let inc = 0;

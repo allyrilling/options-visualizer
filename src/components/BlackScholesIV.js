@@ -1,7 +1,7 @@
 import React from 'react';
 import { Col, Container, Row, Form, InputGroup, Button, ButtonGroup } from 'react-bootstrap';
 import { useState } from 'react';
-import * as bsl from '../logic/BlackScholesLib';
+import * as bsl from '../logic/BlackScholesLib.js';
 
 export default function BlackScholesIV() {
 	const [S, setS] = useState(100);

@@ -2,8 +2,8 @@ import React from 'react';
 import { Container, ButtonGroup, Button } from 'react-bootstrap';
 import { useState } from 'react';
 import '../css/BinModel.css';
-import MultiStepBinModel from './MultiStepBinModel';
-import SingleStepBinModel from './SingleStepBinModel';
+import MultiStepBinModel from './MultiStepBinModel.js';
+import SingleStepBinModel from './SingleStepBinModel.js';
 
 export default function BinModel() {
 	const modelTypes = {

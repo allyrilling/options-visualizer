@@ -2,13 +2,13 @@ import './css/App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import OptionVis from './components/OptionsVis.js';
-import Navigation from './components/Navigation';
-import Footer from './components/Footer';
-import Home from './components/Home';
-import BlackScholesPrices from './components/BlackScholesPrices';
-import BlackScholesIV from './components/BlackScholesIV';
-import BinModel from './components/BinModel';
-import TVM from './components/TVM';
+import Navigation from './components/Navigation.js';
+import Footer from './components/Footer.js';
+import Home from './components/Home.js';
+import BlackScholesPrices from './components/BlackScholesPrices.js';
+import BlackScholesIV from './components/BlackScholesIV.js';
+import BinModel from './components/BinModel.js';
+import TVM from './components/TVM.js';
 
 function App() {
 	return (

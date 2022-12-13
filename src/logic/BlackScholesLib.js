@@ -1,4 +1,6 @@
-var { jStat } = require('jstat');
+// var { jStat } = require('jstat');
+import pkg from 'jstat';
+const { jStat } = pkg;
 
 // *****************************************
 // * Stats
@@ -7,6 +9,8 @@ var { jStat } = require('jstat');
 export function NORMDIST(x, mean, sd, cumulative) {
 	return cumulative ? jStat.normal.cdf(x, mean, sd) : jStat.normal.pdf(x, mean, sd);
 }
+
+// todo add normdist prime
 
 // *****************************************
 // * Ds
@@ -107,7 +111,16 @@ const tolerance = 10 ** -8;
 // *****************************************
 
 function vega(S, sigma, K, T, R, DY) {
-	let d1 = (1 / (sigma * Math.sqrt(T))) * (Math.log(S / K) + (R - DY + 0.5 * sigma ** 2) * T);
+	let d1 = calcD1(S, K, sigma, DY, R, T);
 	let vega = S * T ** 0.5 * NORMDIST(d1, 0, 1, false);
 	return vega;
+}
+
+export function delta(S, sigma, K, T, R, DY, isCall) {
+	let ds = calcDs(S, K, sigma, DY, R, T);
+	if (isCall) {
+		return ds[0];
+	} else {
+		return -ds[2];
+	}
 }
