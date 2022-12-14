@@ -20,7 +20,7 @@ create a library for all calcs
 
 ## Options Visualizer
 
-currently broken, see file for comments on how to fix
+**currently broken, see file for comments on how to fix**
 
 add more spreads
 
@@ -31,21 +31,27 @@ add dividends for multistep bin model
 split single step and multi step bin models into two tabs
 add dropdowns to menubar for single and multistep bin model
 
-put call price rounding
-
-greeks
-- delta
-- gamma
-- vega
-- theta
-- rho
 
 ## Black Scholes
 
+DRIFT TERM ERROR
 drift term should be a percent
 - drift term is maybe wo *t?
 
+KEYBOARD CALC MODEL
 add ability to do cmd+return to calc model 
+
+ROUNDING OPTION
+put call price rounding
+
+TEST FUNCTIONS
+add tests (unit tests?) to bsl
+
+ADD COPY OUTPUTS
+button to copy all outputs nicly formatted to clipboard
+
+TOOLTIPS
+add tooltips to greeks to explain their output
 
 ## Scratch
 

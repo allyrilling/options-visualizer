@@ -8,9 +8,14 @@ const { jStat } = pkg;
 
 export function NORMDIST(x, mean, sd, cumulative) {
 	return cumulative ? jStat.normal.cdf(x, mean, sd) : jStat.normal.pdf(x, mean, sd);
+	// return (1 / Math.sqrt(2 * Math.PI * sd)) * Math.exp(-((x - mean) ** 2) / (2 * sd ** 2));
 }
 
 // todo add normdist prime
+export function NORMDIST_PRIME(x) {
+	// return (1 / Math.sqrt(2 * Math.PI)) * Math.E ** (-0.5 * x ** 2);
+	return (1 / Math.sqrt(2 * Math.PI)) * Math.exp(-0.5 * x ** 2);
+}
 
 // *****************************************
 // * Ds
@@ -36,7 +41,7 @@ export function calcDs(S, K, sigma, DY, R, T) {
 	let d1 = calcD1(S, K, sigma, DY, R, T);
 	let d2 = calcD2(d1, sigma, T);
 	let Nds = calcNds(d1, d2);
-	return [d1, d2].concat(Nds);
+	return [d1, d2].concat(Nds); // [d1, d2, N(d1), N(d2), N(-d1), N(-d2)]
 }
 
 // *****************************************
@@ -65,20 +70,15 @@ export function calcDriftTerm(sigma, R, DY, T) {
 // *****************************************
 
 export function calcBSPrice(S, K, sigma, DY, R, T, isCall) {
-	let d1 = calcD1(S, K, sigma, DY, R, T);
-	let d2 = calcD2(d1, sigma, T);
+	let ds = calcDs(S, K, sigma, DY, R, T);
 	let pvK = calcPVK(K, R, T);
 	let pvS = calcPVS(S, DY, T);
-	let Nd1 = NORMDIST(d1, 0, 1, true);
-	let Nd2 = NORMDIST(d2, 0, 1, true);
-	let negNd1 = 1 - Nd1;
-	let negNd2 = 1 - Nd2;
 
 	if (isCall) {
-		let callPrice = pvS * Nd1 - pvK * Nd2;
+		let callPrice = pvS * ds[2] - pvK * ds[3];
 		return callPrice;
 	} else {
-		let putPrice = pvK * negNd2 - pvS * negNd1;
+		let putPrice = pvK * ds[5] - pvS * ds[4];
 		return putPrice;
 	}
 }
@@ -110,17 +110,43 @@ const tolerance = 10 ** -8;
 // * Greeks
 // *****************************************
 
-function vega(S, sigma, K, T, R, DY) {
+export function vega(S, sigma, K, T, R, DY) {
 	let d1 = calcD1(S, K, sigma, DY, R, T);
-	let vega = S * T ** 0.5 * NORMDIST(d1, 0, 1, false);
+	let vega = S * T ** 0.5 * NORMDIST(d1, 0, 1, false); // * cents change per 1% increase in sigma
 	return vega;
 }
 
 export function delta(S, sigma, K, T, R, DY, isCall) {
 	let ds = calcDs(S, K, sigma, DY, R, T);
 	if (isCall) {
-		return ds[0];
+		return ds[2]; // N(d1)
 	} else {
-		return -ds[2];
+		return ds[4]; // -N(-d1)
 	}
+}
+
+export function theta(S, sigma, K, T, R, DY, isCall) {
+	let ds = calcDs(S, K, sigma, DY, R, T);
+	let xTerm = -(S * sigma) / (2 * Math.sqrt(T));
+	if (isCall) {
+		let nPrimeD1 = NORMDIST_PRIME(ds[0]); // N'(d1)
+		return xTerm * nPrimeD1 - R * calcPVK(K, R, T) * ds[3];
+	} else {
+		let nPrimeNegD1 = NORMDIST_PRIME(-ds[0]); // N'(-d1)
+		return xTerm * nPrimeNegD1 + R * calcPVK(K, R, T) * ds[5];
+	}
+}
+
+export function rho(S, sigma, K, T, R, DY, isCall) {
+	let ds = calcDs(S, K, sigma, DY, R, T);
+	if (isCall) {
+		return calcPVK(K, R, T) * ds[3] * T; // * cents change per 1% increase in int rate
+	} else {
+		return -calcPVK(K, R, T) * ds[5] * T; // * cents change per 1% increase in int rate
+	}
+}
+
+export function gamma(S, sigma, K, T, R, DY) {
+	let ds = calcDs(S, K, sigma, DY, R, T);
+	return (1 / (sigma * S * Math.sqrt(T))) * NORMDIST_PRIME(ds[0]);
 }

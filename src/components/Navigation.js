@@ -15,7 +15,7 @@ function Navigation(props) {
 	};
 
 	const bsmTabs = {
-		prices: 'Option Prices',
+		prices: 'Prices and Greeks',
 		iv: 'Implied Volatility',
 	};
 

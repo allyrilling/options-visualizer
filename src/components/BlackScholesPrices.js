@@ -20,8 +20,18 @@ export default function BlackScholesPrices() {
 	const [pvK, setpvK] = useState(0);
 	const [pvS, setpvS] = useState(0);
 	const [driftTerm, setDriftTerm] = useState(0);
+
 	const [callPrice, setCallPrice] = useState(0);
 	const [putPrice, setPutPrice] = useState(0);
+
+	const [deltaCall, setDeltaCall] = useState(0);
+	const [deltaPut, setDeltaPut] = useState(0);
+	const [gamma, setGamma] = useState(0);
+	const [vega, setVega] = useState(0);
+	const [thetaCall, setThetaCall] = useState(0);
+	const [thetaPut, setThetaPut] = useState(0);
+	const [rhoCall, setRhoCall] = useState(0);
+	const [rhoPut, setRhoPut] = useState(0);
 
 	const timeUnits = {
 		years: 'Years',
@@ -52,6 +62,15 @@ export default function BlackScholesPrices() {
 
 		setCallPrice(bsl.calcBSPrice(S, K, sig, dy, r, T, true));
 		setPutPrice(bsl.calcBSPrice(S, K, sig, dy, r, T, false));
+
+		setDeltaCall(bsl.delta(S, sig, K, T, r, dy, true));
+		setDeltaPut(bsl.delta(S, sig, K, T, r, dy, false));
+		setGamma(bsl.gamma(S, sig, K, T, r, dy));
+		setVega(bsl.vega(S, sig, K, T, r, dy));
+		setThetaCall(bsl.theta(S, sig, K, T, r, dy, true));
+		setThetaPut(bsl.theta(S, sig, K, T, r, dy, false));
+		setRhoCall(bsl.rho(S, sig, K, T, r, dy, true));
+		setRhoPut(bsl.rho(S, sig, K, T, r, dy, false));
 	}
 
 	function handleTimeUnitChange(e) {
@@ -81,7 +100,7 @@ export default function BlackScholesPrices() {
 
 	return (
 		<Container>
-			<h1>BSM: Option Prices</h1>
+			<h1>Option Prices and Greeks</h1>
 			<p></p>
 			<h2>Inputs</h2>
 			<Row>
@@ -262,6 +281,60 @@ export default function BlackScholesPrices() {
 					<InputGroup>
 						<InputGroup.Text>$</InputGroup.Text>
 						<Form.Control disabled value={putPrice} />
+					</InputGroup>
+				</Col>
+			</Row>
+			<p></p>
+			<Row>
+				<Col>
+					<Form.Label>Call Delta</Form.Label>
+					<InputGroup>
+						<Form.Control disabled value={deltaCall} />
+					</InputGroup>
+				</Col>
+				<Col>
+					<Form.Label>Put Delta</Form.Label>
+					<InputGroup>
+						<Form.Control disabled value={deltaPut} />
+					</InputGroup>
+				</Col>
+				<Col>
+					<Form.Label>Gamma</Form.Label>
+					<InputGroup>
+						<Form.Control disabled value={gamma} />
+					</InputGroup>
+				</Col>
+				<Col>
+					<Form.Label>Vega</Form.Label>
+					<InputGroup>
+						<Form.Control disabled value={vega} />
+					</InputGroup>
+				</Col>
+			</Row>
+			<p></p>
+			<Row>
+				<Col>
+					<Form.Label>Call Theta</Form.Label>
+					<InputGroup>
+						<Form.Control disabled value={thetaCall} />
+					</InputGroup>
+				</Col>
+				<Col>
+					<Form.Label>Put Theta</Form.Label>
+					<InputGroup>
+						<Form.Control disabled value={thetaPut} />
+					</InputGroup>
+				</Col>
+				<Col>
+					<Form.Label>Call Rho</Form.Label>
+					<InputGroup>
+						<Form.Control disabled value={rhoCall} />
+					</InputGroup>
+				</Col>
+				<Col>
+					<Form.Label>Put Rho</Form.Label>
+					<InputGroup>
+						<Form.Control disabled value={rhoPut} />
 					</InputGroup>
 				</Col>
 			</Row>
