@@ -1,5 +1,5 @@
 import React from 'react';
-import { Col, Container, Row, Form, InputGroup, Button } from 'react-bootstrap';
+import { Col, Container, Row, Form, InputGroup, Button, OverlayTrigger, Tooltip, Popover } from 'react-bootstrap';
 import { useState } from 'react';
 import * as bsl from '../logic/BlackScholesLib.js';
 
@@ -40,7 +40,46 @@ export default function BlackScholesPrices() {
 		days365: 'Days (365 days / year) -> Years',
 		days252: 'Days (252 days / year) -> Years',
 	};
+
 	const [timeUnit, setTimeUnit] = useState(timeUnits.years);
+
+	const fields = {
+		spotPrice: 'Spot Price',
+		sigma: 'Sigma σ',
+		divYield: 'Dividend Yield 𝛿',
+		strikePrice: 'Strike Price',
+		time: 'Time',
+		rate: 'Interest Rate',
+		callPrice: 'Call Price',
+		putPrice: 'Put Price',
+		deltaCall: 'Call Delta Δ',
+		deltaPut: 'Put Delta Δ',
+		gamma: 'Gamma Γ',
+		vega: 'Vega ν',
+		thetaCall: 'Call Theta ϴ',
+		thetaPut: 'Put Theta ϴ',
+		rhoCall: 'Call Rho ρ',
+		rhoPut: 'Put Rho ρ',
+	};
+
+	const descriptions = {
+		spotPrice: 'Current price of the underlying',
+		sigma: 'Volatility of the underlying',
+		divYield: 'Continuously-compounded dividend yield of the underlying',
+		strikePrice: 'Strike price of options contract',
+		time: 'Time remaining until expiration of options contract',
+		rate: 'Current risk-free interest rate',
+		callPrice: 'Price of the call option',
+		putPrice: 'Price of the put option',
+		deltaCall: 'Change in call price per $1 change in price of the underlying',
+		deltaPut: 'Change in put price per $1 change in price of the underlying',
+		gamma: 'Change in delta per $1 change in price of the underlying',
+		vega: 'Change in option price per 1% change in sigma',
+		thetaCall: 'Change in call price per 1 day passed',
+		thetaPut: 'Change in put price per 1 day passed',
+		rhoCall: 'Change in call price per 1% change in the interest rate',
+		rhoPut: 'Change in put price per 1% change in the interest rate',
+	};
 
 	function handleCalcModel() {
 		let r = R / 100;
@@ -105,7 +144,9 @@ export default function BlackScholesPrices() {
 			<h2>Inputs</h2>
 			<Row>
 				<Col>
-					<Form.Label>Spot Price</Form.Label>
+					<OverlayTrigger placement='right' overlay={<Tooltip>{descriptions.spotPrice}</Tooltip>}>
+						<Form.Label>{fields.spotPrice}</Form.Label>
+					</OverlayTrigger>
 					<InputGroup>
 						<InputGroup.Text>$</InputGroup.Text>
 						<Form.Control
@@ -117,7 +158,9 @@ export default function BlackScholesPrices() {
 					</InputGroup>
 				</Col>
 				<Col>
-					<Form.Label>Sigma / Volatility</Form.Label>
+					<OverlayTrigger placement='right' overlay={<Tooltip>{descriptions.sigma}</Tooltip>}>
+						<Form.Label>{fields.sigma}</Form.Label>
+					</OverlayTrigger>
 					<InputGroup>
 						<Form.Control
 							value={sigma}
@@ -130,7 +173,9 @@ export default function BlackScholesPrices() {
 					</InputGroup>
 				</Col>
 				<Col>
-					<Form.Label>Dividend Yield</Form.Label>
+					<OverlayTrigger placement='right' overlay={<Tooltip>{descriptions.divYield}</Tooltip>}>
+						<Form.Label>{fields.divYield}</Form.Label>
+					</OverlayTrigger>
 					<InputGroup>
 						<Form.Control
 							value={DY}
@@ -146,7 +191,9 @@ export default function BlackScholesPrices() {
 			<p></p>
 			<Row>
 				<Col>
-					<Form.Label>Strike Price</Form.Label>
+					<OverlayTrigger placement='right' overlay={<Tooltip>{descriptions.strikePrice}</Tooltip>}>
+						<Form.Label>{fields.strikePrice}</Form.Label>
+					</OverlayTrigger>
 					<InputGroup>
 						<InputGroup.Text>$</InputGroup.Text>
 						<Form.Control
@@ -158,7 +205,9 @@ export default function BlackScholesPrices() {
 					</InputGroup>
 				</Col>
 				<Col>
-					<Form.Label>Time</Form.Label>
+					<OverlayTrigger placement='right' overlay={<Tooltip>{descriptions.time}</Tooltip>}>
+						<Form.Label>{fields.time}</Form.Label>
+					</OverlayTrigger>
 					<InputGroup>
 						<Form.Control
 							value={T}
@@ -177,7 +226,9 @@ export default function BlackScholesPrices() {
 					</InputGroup>
 				</Col>
 				<Col>
-					<Form.Label>Interest Rate</Form.Label>
+					<OverlayTrigger placement='right' overlay={<Tooltip>{descriptions.rate}</Tooltip>}>
+						<Form.Label>{fields.rate}</Form.Label>
+					</OverlayTrigger>
 					<InputGroup>
 						<Form.Control
 							value={R}
@@ -207,14 +258,18 @@ export default function BlackScholesPrices() {
 			<h2>Prices</h2>
 			<Row>
 				<Col>
-					<Form.Label>Call Price</Form.Label>
+					<OverlayTrigger placement='right' overlay={<Tooltip>{descriptions.callPrice}</Tooltip>}>
+						<Form.Label>{fields.callPrice}</Form.Label>
+					</OverlayTrigger>
 					<InputGroup>
 						<InputGroup.Text>$</InputGroup.Text>
 						<Form.Control disabled value={callPrice} />
 					</InputGroup>
 				</Col>
 				<Col>
-					<Form.Label>Put Price</Form.Label>
+					<OverlayTrigger placement='right' overlay={<Tooltip>{descriptions.putPrice}</Tooltip>}>
+						<Form.Label>{fields.putPrice}</Form.Label>
+					</OverlayTrigger>
 					<InputGroup>
 						<InputGroup.Text>$</InputGroup.Text>
 						<Form.Control disabled value={putPrice} />
@@ -225,25 +280,33 @@ export default function BlackScholesPrices() {
 			<h2>Greeks</h2>
 			<Row>
 				<Col>
-					<Form.Label>Call Delta Δ</Form.Label>
+					<OverlayTrigger placement='right' overlay={<Tooltip>{descriptions.deltaCall}</Tooltip>}>
+						<Form.Label>{fields.deltaCall}</Form.Label>
+					</OverlayTrigger>
 					<InputGroup>
 						<Form.Control disabled value={deltaCall} />
 					</InputGroup>
 				</Col>
 				<Col>
-					<Form.Label>Put Delta Δ</Form.Label>
+					<OverlayTrigger placement='right' overlay={<Tooltip>{descriptions.deltaPut}</Tooltip>}>
+						<Form.Label>{fields.deltaPut}</Form.Label>
+					</OverlayTrigger>
 					<InputGroup>
 						<Form.Control disabled value={deltaPut} />
 					</InputGroup>
 				</Col>
 				<Col>
-					<Form.Label>Gamma Γ</Form.Label>
+					<OverlayTrigger placement='right' overlay={<Tooltip>{descriptions.gamma}</Tooltip>}>
+						<Form.Label>{fields.gamma}</Form.Label>
+					</OverlayTrigger>
 					<InputGroup>
 						<Form.Control disabled value={gamma} />
 					</InputGroup>
 				</Col>
 				<Col>
-					<Form.Label>Vega ν</Form.Label>
+					<OverlayTrigger placement='right' overlay={<Tooltip>{descriptions.vega}</Tooltip>}>
+						<Form.Label>{fields.vega}</Form.Label>
+					</OverlayTrigger>
 					<InputGroup>
 						<Form.Control disabled value={vega} />
 					</InputGroup>
@@ -252,25 +315,33 @@ export default function BlackScholesPrices() {
 			<p></p>
 			<Row>
 				<Col>
-					<Form.Label>Call Theta ϴ</Form.Label>
+					<OverlayTrigger placement='right' overlay={<Tooltip>{descriptions.thetaCall}</Tooltip>}>
+						<Form.Label>{fields.thetaCall}</Form.Label>
+					</OverlayTrigger>
 					<InputGroup>
 						<Form.Control disabled value={thetaCall} />
 					</InputGroup>
 				</Col>
 				<Col>
-					<Form.Label>Put Theta ϴ</Form.Label>
+					<OverlayTrigger placement='right' overlay={<Tooltip>{descriptions.thetaPut}</Tooltip>}>
+						<Form.Label>{fields.thetaPut}</Form.Label>
+					</OverlayTrigger>
 					<InputGroup>
 						<Form.Control disabled value={thetaPut} />
 					</InputGroup>
 				</Col>
 				<Col>
-					<Form.Label>Call Rho ρ</Form.Label>
+					<OverlayTrigger placement='right' overlay={<Tooltip>{descriptions.rhoCall}</Tooltip>}>
+						<Form.Label>{fields.rhoCall}</Form.Label>
+					</OverlayTrigger>
 					<InputGroup>
 						<Form.Control disabled value={rhoCall} />
 					</InputGroup>
 				</Col>
 				<Col>
-					<Form.Label>Put Rho ρ</Form.Label>
+					<OverlayTrigger placement='right' overlay={<Tooltip>{descriptions.rhoPut}</Tooltip>}>
+						<Form.Label>{fields.rhoPut}</Form.Label>
+					</OverlayTrigger>
 					<InputGroup>
 						<Form.Control disabled value={rhoPut} />
 					</InputGroup>
