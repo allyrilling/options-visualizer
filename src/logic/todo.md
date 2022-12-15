@@ -61,11 +61,14 @@ button to copy all outputs nicly formatted to clipboard
 
 TOOLTIPS \
 add tooltips to greeks to explain their output
+use onMouseOver
+https://stackoverflow.com/questions/35714535/react-show-button-on-mouse-enter
 
 AUX OUTPUTS
 add n'(d1) and n'(d2) to aux outputs
 
-
+ADD TOGGLE
+between 1 day passed and 1 year passed for theta
 
 ## Scratch
 

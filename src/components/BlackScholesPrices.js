@@ -1,7 +1,8 @@
 import React from 'react';
-import { Col, Container, Row, Form, InputGroup, Button, OverlayTrigger, Tooltip, Popover } from 'react-bootstrap';
+import { Col, Container, Row, Form, InputGroup, Button, OverlayTrigger, Tooltip, Overlay } from 'react-bootstrap';
 import { useState } from 'react';
 import * as bsl from '../logic/BlackScholesLib.js';
+import OutputTextbox from './OutputTextbox.js';
 
 export default function BlackScholesPrices() {
 	const [S, setS] = useState(100);
@@ -15,8 +16,8 @@ export default function BlackScholesPrices() {
 	const [d2, setd2] = useState(0);
 	const [Nd1, setNd1] = useState(0);
 	const [Nd2, setNd2] = useState(0);
-	const [negNd1, setNegNd1] = useState(0);
-	const [negNd2, setNegNd2] = useState(0);
+	const [N_d1, setNegNd1] = useState(0);
+	const [N_d2, setNegNd2] = useState(0);
 	const [pvK, setpvK] = useState(0);
 	const [pvS, setpvS] = useState(0);
 	const [driftTerm, setDriftTerm] = useState(0);
@@ -60,6 +61,15 @@ export default function BlackScholesPrices() {
 		thetaPut: 'Put Theta ϴ',
 		rhoCall: 'Call Rho ρ',
 		rhoPut: 'Put Rho ρ',
+		d1: 'd1',
+		d2: 'd2',
+		Nd1: 'N(d1)',
+		Nd2: 'N(d2)',
+		N_d1: 'N(-d1)',
+		N_d2: 'N(-d2)',
+		pvK: 'PV(K)',
+		pvS: 'PV(S)',
+		driftTerm: 'Drift Term',
 	};
 
 	const descriptions = {
@@ -79,6 +89,15 @@ export default function BlackScholesPrices() {
 		thetaPut: 'Change in put price per 1 day passed',
 		rhoCall: 'Change in call price per 1% change in the interest rate',
 		rhoPut: 'Change in put price per 1% change in the interest rate',
+		d1: 'd1',
+		d2: 'd2',
+		Nd1: 'N(d1)',
+		Nd2: 'N(d2)',
+		N_d1: 'N(-d1)',
+		N_d2: 'N(-d2)',
+		pvK: 'PV(K)',
+		pvS: 'PV(S)',
+		driftTerm: 'Drift Term',
 	};
 
 	function handleCalcModel() {
@@ -135,6 +154,10 @@ export default function BlackScholesPrices() {
 		}
 		setT(parseFloat(T) / denominator);
 		setTimeUnit(timeUnits.years);
+	}
+
+	function handleMouseOver() {
+		console.log('object');
 	}
 
 	return (
@@ -257,159 +280,42 @@ export default function BlackScholesPrices() {
 			<p></p>
 			<h2>Prices</h2>
 			<Row>
-				<Col>
-					<OverlayTrigger placement='right' overlay={<Tooltip>{descriptions.callPrice}</Tooltip>}>
-						<Form.Label>{fields.callPrice}</Form.Label>
-					</OverlayTrigger>
-					<InputGroup>
-						<InputGroup.Text>$</InputGroup.Text>
-						<Form.Control disabled value={callPrice} />
-					</InputGroup>
-				</Col>
-				<Col>
-					<OverlayTrigger placement='right' overlay={<Tooltip>{descriptions.putPrice}</Tooltip>}>
-						<Form.Label>{fields.putPrice}</Form.Label>
-					</OverlayTrigger>
-					<InputGroup>
-						<InputGroup.Text>$</InputGroup.Text>
-						<Form.Control disabled value={putPrice} />
-					</InputGroup>
-				</Col>
+				<OutputTextbox title={fields.callPrice} description={descriptions.callPrice} value={callPrice} />
+				<OutputTextbox title={fields.putPrice} description={descriptions.putPrice} value={putPrice} />
 			</Row>
 			<p></p>
 			<h2>Greeks</h2>
 			<Row>
-				<Col>
-					<OverlayTrigger placement='right' overlay={<Tooltip>{descriptions.deltaCall}</Tooltip>}>
-						<Form.Label>{fields.deltaCall}</Form.Label>
-					</OverlayTrigger>
-					<InputGroup>
-						<Form.Control disabled value={deltaCall} />
-					</InputGroup>
-				</Col>
-				<Col>
-					<OverlayTrigger placement='right' overlay={<Tooltip>{descriptions.deltaPut}</Tooltip>}>
-						<Form.Label>{fields.deltaPut}</Form.Label>
-					</OverlayTrigger>
-					<InputGroup>
-						<Form.Control disabled value={deltaPut} />
-					</InputGroup>
-				</Col>
-				<Col>
-					<OverlayTrigger placement='right' overlay={<Tooltip>{descriptions.gamma}</Tooltip>}>
-						<Form.Label>{fields.gamma}</Form.Label>
-					</OverlayTrigger>
-					<InputGroup>
-						<Form.Control disabled value={gamma} />
-					</InputGroup>
-				</Col>
-				<Col>
-					<OverlayTrigger placement='right' overlay={<Tooltip>{descriptions.vega}</Tooltip>}>
-						<Form.Label>{fields.vega}</Form.Label>
-					</OverlayTrigger>
-					<InputGroup>
-						<Form.Control disabled value={vega} />
-					</InputGroup>
-				</Col>
+				<OutputTextbox title={fields.deltaCall} description={descriptions.deltaCall} value={deltaCall} />
+				<OutputTextbox title={fields.deltaPut} description={descriptions.deltaPut} value={deltaPut} />
+				<OutputTextbox title={fields.gamma} description={descriptions.gamma} value={gamma} />
+				<OutputTextbox title={fields.vega} description={descriptions.vega} value={vega} />
 			</Row>
 			<p></p>
 			<Row>
-				<Col>
-					<OverlayTrigger placement='right' overlay={<Tooltip>{descriptions.thetaCall}</Tooltip>}>
-						<Form.Label>{fields.thetaCall}</Form.Label>
-					</OverlayTrigger>
-					<InputGroup>
-						<Form.Control disabled value={thetaCall} />
-					</InputGroup>
-				</Col>
-				<Col>
-					<OverlayTrigger placement='right' overlay={<Tooltip>{descriptions.thetaPut}</Tooltip>}>
-						<Form.Label>{fields.thetaPut}</Form.Label>
-					</OverlayTrigger>
-					<InputGroup>
-						<Form.Control disabled value={thetaPut} />
-					</InputGroup>
-				</Col>
-				<Col>
-					<OverlayTrigger placement='right' overlay={<Tooltip>{descriptions.rhoCall}</Tooltip>}>
-						<Form.Label>{fields.rhoCall}</Form.Label>
-					</OverlayTrigger>
-					<InputGroup>
-						<Form.Control disabled value={rhoCall} />
-					</InputGroup>
-				</Col>
-				<Col>
-					<OverlayTrigger placement='right' overlay={<Tooltip>{descriptions.rhoPut}</Tooltip>}>
-						<Form.Label>{fields.rhoPut}</Form.Label>
-					</OverlayTrigger>
-					<InputGroup>
-						<Form.Control disabled value={rhoPut} />
-					</InputGroup>
-				</Col>
+				<OutputTextbox title={fields.thetaCall} description={descriptions.thetaCall} value={thetaCall} />
+				<OutputTextbox title={fields.thetaPut} description={descriptions.thetaPut} value={thetaPut} />
+				<OutputTextbox title={fields.rhoCall} description={descriptions.rhoCall} value={rhoCall} />
+				<OutputTextbox title={fields.rhoPut} description={descriptions.rhoPut} value={rhoPut} />
 			</Row>
 			<p></p>
 			<h2>Auxillary Outputs</h2>
 			<Row>
-				<Col>
-					<Form.Label>d1</Form.Label>
-					<InputGroup>
-						<Form.Control disabled value={d1} />
-					</InputGroup>
-				</Col>
-				<Col>
-					<Form.Label>d2</Form.Label>
-					<InputGroup>
-						<Form.Control disabled value={d2} />
-					</InputGroup>
-				</Col>
+				<OutputTextbox title={fields.d1} description={descriptions.d1} value={d1} />
+				<OutputTextbox title={fields.d2} description={descriptions.d2} value={d2} />
 			</Row>
 			<p></p>
 			<Row>
-				<Col>
-					<Form.Label>N(d1)</Form.Label>
-					<InputGroup>
-						<Form.Control disabled value={Nd1} />
-					</InputGroup>
-				</Col>
-				<Col>
-					<Form.Label>N(d2)</Form.Label>
-					<InputGroup>
-						<Form.Control disabled value={Nd2} />
-					</InputGroup>
-				</Col>
-				<Col>
-					<Form.Label>N(-d1)</Form.Label>
-					<InputGroup>
-						<Form.Control disabled value={negNd1} />
-					</InputGroup>
-				</Col>
-				<Col>
-					<Form.Label>N(-d2)</Form.Label>
-					<InputGroup>
-						<Form.Control disabled value={negNd2} />
-					</InputGroup>
-				</Col>
+				<OutputTextbox title={fields.Nd1} description={descriptions.Nd1} value={Nd1} />
+				<OutputTextbox title={fields.Nd2} description={descriptions.Nd2} value={Nd2} />
+				<OutputTextbox title={fields.N_d1} description={descriptions.N_d1} value={N_d1} />
+				<OutputTextbox title={fields.N_d2} description={descriptions.N_d2} value={N_d2} />
 			</Row>
 			<p></p>
 			<Row>
-				<Col>
-					<Form.Label>PV(K)</Form.Label>
-					<InputGroup>
-						<Form.Control disabled value={pvK} />
-					</InputGroup>
-				</Col>
-				<Col>
-					<Form.Label>PV(S)</Form.Label>
-					<InputGroup>
-						<Form.Control disabled value={pvS} />
-					</InputGroup>
-				</Col>
-				<Col>
-					<Form.Label>Drift Term</Form.Label>
-					<InputGroup>
-						<Form.Control disabled value={driftTerm} />
-					</InputGroup>
-				</Col>
+				<OutputTextbox title={fields.pvK} description={descriptions.pvK} value={pvK} />
+				<OutputTextbox title={fields.pvS} description={descriptions.pvS} value={pvS} />
+				<OutputTextbox title={fields.driftTerm} description={descriptions.driftTerm} value={driftTerm} />
 			</Row>
 		</Container>
 	);
