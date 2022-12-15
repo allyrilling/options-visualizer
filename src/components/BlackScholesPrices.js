@@ -204,7 +204,80 @@ export default function BlackScholesPrices() {
 				</Col>
 			</Row>
 			<p></p>
-			<h2>Outputs</h2>
+			<h2>Prices</h2>
+			<Row>
+				<Col>
+					<Form.Label>Call Price</Form.Label>
+					<InputGroup>
+						<InputGroup.Text>$</InputGroup.Text>
+						<Form.Control disabled value={callPrice} />
+					</InputGroup>
+				</Col>
+				<Col>
+					<Form.Label>Put Price</Form.Label>
+					<InputGroup>
+						<InputGroup.Text>$</InputGroup.Text>
+						<Form.Control disabled value={putPrice} />
+					</InputGroup>
+				</Col>
+			</Row>
+			<p></p>
+			<h2>Greeks</h2>
+			<Row>
+				<Col>
+					<Form.Label>Call Delta Δ</Form.Label>
+					<InputGroup>
+						<Form.Control disabled value={deltaCall} />
+					</InputGroup>
+				</Col>
+				<Col>
+					<Form.Label>Put Delta Δ</Form.Label>
+					<InputGroup>
+						<Form.Control disabled value={deltaPut} />
+					</InputGroup>
+				</Col>
+				<Col>
+					<Form.Label>Gamma Γ</Form.Label>
+					<InputGroup>
+						<Form.Control disabled value={gamma} />
+					</InputGroup>
+				</Col>
+				<Col>
+					<Form.Label>Vega ν</Form.Label>
+					<InputGroup>
+						<Form.Control disabled value={vega} />
+					</InputGroup>
+				</Col>
+			</Row>
+			<p></p>
+			<Row>
+				<Col>
+					<Form.Label>Call Theta ϴ</Form.Label>
+					<InputGroup>
+						<Form.Control disabled value={thetaCall} />
+					</InputGroup>
+				</Col>
+				<Col>
+					<Form.Label>Put Theta ϴ</Form.Label>
+					<InputGroup>
+						<Form.Control disabled value={thetaPut} />
+					</InputGroup>
+				</Col>
+				<Col>
+					<Form.Label>Call Rho ρ</Form.Label>
+					<InputGroup>
+						<Form.Control disabled value={rhoCall} />
+					</InputGroup>
+				</Col>
+				<Col>
+					<Form.Label>Put Rho ρ</Form.Label>
+					<InputGroup>
+						<Form.Control disabled value={rhoPut} />
+					</InputGroup>
+				</Col>
+			</Row>
+			<p></p>
+			<h2>Auxillary Outputs</h2>
 			<Row>
 				<Col>
 					<Form.Label>d1</Form.Label>
@@ -264,77 +337,6 @@ export default function BlackScholesPrices() {
 					<Form.Label>Drift Term</Form.Label>
 					<InputGroup>
 						<Form.Control disabled value={driftTerm} />
-					</InputGroup>
-				</Col>
-			</Row>
-			<p></p>
-			<Row>
-				<Col>
-					<Form.Label>Call Price</Form.Label>
-					<InputGroup>
-						<InputGroup.Text>$</InputGroup.Text>
-						<Form.Control disabled value={callPrice} />
-					</InputGroup>
-				</Col>
-				<Col>
-					<Form.Label>Put Price</Form.Label>
-					<InputGroup>
-						<InputGroup.Text>$</InputGroup.Text>
-						<Form.Control disabled value={putPrice} />
-					</InputGroup>
-				</Col>
-			</Row>
-			<p></p>
-			<Row>
-				<Col>
-					<Form.Label>Call Delta</Form.Label>
-					<InputGroup>
-						<Form.Control disabled value={deltaCall} />
-					</InputGroup>
-				</Col>
-				<Col>
-					<Form.Label>Put Delta</Form.Label>
-					<InputGroup>
-						<Form.Control disabled value={deltaPut} />
-					</InputGroup>
-				</Col>
-				<Col>
-					<Form.Label>Gamma</Form.Label>
-					<InputGroup>
-						<Form.Control disabled value={gamma} />
-					</InputGroup>
-				</Col>
-				<Col>
-					<Form.Label>Vega</Form.Label>
-					<InputGroup>
-						<Form.Control disabled value={vega} />
-					</InputGroup>
-				</Col>
-			</Row>
-			<p></p>
-			<Row>
-				<Col>
-					<Form.Label>Call Theta</Form.Label>
-					<InputGroup>
-						<Form.Control disabled value={thetaCall} />
-					</InputGroup>
-				</Col>
-				<Col>
-					<Form.Label>Put Theta</Form.Label>
-					<InputGroup>
-						<Form.Control disabled value={thetaPut} />
-					</InputGroup>
-				</Col>
-				<Col>
-					<Form.Label>Call Rho</Form.Label>
-					<InputGroup>
-						<Form.Control disabled value={rhoCall} />
-					</InputGroup>
-				</Col>
-				<Col>
-					<Form.Label>Put Rho</Form.Label>
-					<InputGroup>
-						<Form.Control disabled value={rhoPut} />
 					</InputGroup>
 				</Col>
 			</Row>

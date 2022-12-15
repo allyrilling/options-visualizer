@@ -12,10 +12,10 @@ export function NORMDIST(x, mean, sd, cumulative) {
 }
 
 // todo add normdist prime
-export function NORMDIST_PRIME(x) {
-	// return (1 / Math.sqrt(2 * Math.PI)) * Math.E ** (-0.5 * x ** 2);
-	return (1 / Math.sqrt(2 * Math.PI)) * Math.exp(-0.5 * x ** 2);
-}
+// export function NORMDIST_PRIME(x) {
+// 	// return (1 / Math.sqrt(2 * Math.PI)) * Math.E ** (-0.5 * x ** 2);
+// 	return (1 / Math.sqrt(2 * Math.PI)) * Math.exp(-0.5 * x ** 2);
+// }
 
 // *****************************************
 // * Ds
@@ -110,6 +110,7 @@ const tolerance = 10 ** -8;
 // * Greeks
 // *****************************************
 
+// ! units: $ inc in option value per 100% change in vol
 export function vega(S, sigma, K, T, R, DY) {
 	let d1 = calcD1(S, K, sigma, DY, R, T);
 	let vega = S * T ** 0.5 * NORMDIST(d1, 0, 1, false); // * cents change per 1% increase in sigma
@@ -121,19 +122,18 @@ export function delta(S, sigma, K, T, R, DY, isCall) {
 	if (isCall) {
 		return ds[2]; // N(d1)
 	} else {
-		return ds[4]; // -N(-d1)
+		return -ds[4]; // -N(-d1)
 	}
 }
 
+// ! units: $ per year, so should divide by 252 [make note of this] to get units as $ per day
 export function theta(S, sigma, K, T, R, DY, isCall) {
 	let ds = calcDs(S, K, sigma, DY, R, T);
-	let xTerm = -(S * sigma) / (2 * Math.sqrt(T));
+	let xTerm = (-(S * sigma) * NORMDIST(ds[0], 0, 1, false)) / (2 * Math.sqrt(T)); // N'(d1) and N'(-d1)
 	if (isCall) {
-		let nPrimeD1 = NORMDIST_PRIME(ds[0]); // N'(d1)
-		return xTerm * nPrimeD1 - R * calcPVK(K, R, T) * ds[3];
+		return (xTerm - R * calcPVK(K, R, T) * ds[3]) / 252;
 	} else {
-		let nPrimeNegD1 = NORMDIST_PRIME(-ds[0]); // N'(-d1)
-		return xTerm * nPrimeNegD1 + R * calcPVK(K, R, T) * ds[5];
+		return (xTerm + R * calcPVK(K, R, T) * ds[5]) / 252;
 	}
 }
 
@@ -148,5 +148,7 @@ export function rho(S, sigma, K, T, R, DY, isCall) {
 
 export function gamma(S, sigma, K, T, R, DY) {
 	let ds = calcDs(S, K, sigma, DY, R, T);
-	return (1 / (sigma * S * Math.sqrt(T))) * NORMDIST_PRIME(ds[0]);
+	// return NORMDIST_PRIME(ds[0]) / (sigma * S * Math.sqrt(T));
+	// derivative of normdist is just the non cumulative version of normdist
+	return NORMDIST(ds[0], 0, 1, false) / (sigma * S * Math.sqrt(T));
 }
