@@ -61,8 +61,11 @@ export function calcPVS(S, DY, T) {
 // *****************************************
 
 export function calcDriftTerm(sigma, R, DY, T) {
-	// ! this might be incorrect
 	return (R - DY + 0.5 * sigma ** 2) * T;
+}
+
+export function calcSpecialK(S, sigma, R, DY, T) {
+	return S * Math.exp((R - DY + 0.5 * sigma ** 2) * T);
 }
 
 // *****************************************

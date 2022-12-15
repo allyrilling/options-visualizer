@@ -43,10 +43,6 @@ add dropdowns to menubar for single and multistep bin model
 
 ## Black Scholes
 
-DRIFT TERM ERROR \
-drift term should be a percent
-- drift term is maybe wo *t?
-
 KEYBOARD CALC MODEL \
 add ability to do cmd+return to calc model 
 

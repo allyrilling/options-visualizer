@@ -21,6 +21,7 @@ export default function BlackScholesPrices() {
 	const [pvK, setpvK] = useState(0);
 	const [pvS, setpvS] = useState(0);
 	const [driftTerm, setDriftTerm] = useState(0);
+	const [specialK, setSpecialK] = useState(0);
 
 	const [callPrice, setCallPrice] = useState(0);
 	const [putPrice, setPutPrice] = useState(0);
@@ -70,6 +71,7 @@ export default function BlackScholesPrices() {
 		pvK: 'PV(K)',
 		pvS: 'PV(S)',
 		driftTerm: 'Drift Term',
+		specialK: 'Special K',
 	};
 
 	const descriptions = {
@@ -98,6 +100,7 @@ export default function BlackScholesPrices() {
 		pvK: 'PV(K)',
 		pvS: 'PV(S)',
 		driftTerm: 'Drift Term',
+		specialK: 'Strike price such that option has 50% chance of finishing ITM',
 	};
 
 	function handleCalcModel() {
@@ -117,6 +120,7 @@ export default function BlackScholesPrices() {
 		setpvK(bsl.calcPVK(K, r, T));
 		setpvS(bsl.calcPVS(S, dy, T));
 		setDriftTerm(bsl.calcDriftTerm(sig, r, dy, T));
+		setSpecialK(bsl.calcSpecialK(S, sig, r, dy, T));
 
 		setCallPrice(bsl.calcBSPrice(S, K, sig, dy, r, T, true));
 		setPutPrice(bsl.calcBSPrice(S, K, sig, dy, r, T, false));
@@ -316,6 +320,8 @@ export default function BlackScholesPrices() {
 				<OutputTextbox title={fields.pvK} description={descriptions.pvK} value={pvK} />
 				<OutputTextbox title={fields.pvS} description={descriptions.pvS} value={pvS} />
 				<OutputTextbox title={fields.driftTerm} description={descriptions.driftTerm} value={driftTerm} />
+				<OutputTextbox title={fields.driftTerm} description={descriptions.driftTerm} value={driftTerm} />
+				<OutputTextbox title={fields.specialK} description={descriptions.specialK} value={specialK} />
 			</Row>
 		</Container>
 	);
