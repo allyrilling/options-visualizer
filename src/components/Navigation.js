@@ -9,6 +9,7 @@ function Navigation(props) {
 
 	const tabs = {
 		tvm: 'TVM Calculator',
+		ff: 'Forwards / Futures',
 		ov: 'Options Visualizer',
 		bm: 'Binomial Model',
 		bsm: 'Black-Scholes Model',
@@ -30,6 +31,9 @@ function Navigation(props) {
 					<Nav className='ml-auto'>
 						<Nav.Link className='linkHover' onClick={() => navigate('/tvm')}>
 							{tabs.tvm}
+						</Nav.Link>
+						<Nav.Link className='linkHover' onClick={() => navigate('/forwards-futures')}>
+							{tabs.ff}
 						</Nav.Link>
 						<Nav.Link className='linkHover' onClick={() => navigate('/options-visualizer')}>
 							{tabs.ov}
