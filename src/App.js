@@ -24,6 +24,7 @@ function App() {
 						<Route exact path='/tvm' element={<TVM />} />
 						<Route exact path='/forwards-futures' element={<ForwardsFutures />} />
 						<Route exact path='/options-visualizer' element={<OptionVis />} />
+						<Route exact path='/spreads-viewer' element={<OptionVis />} />
 						<Route exact path='/binomial-model' element={<BinModel />} />
 						{/* <Route exact path='/black-scholes-model' element={<BlackScholes />} /> */}
 						<Route exact path='/bsm-prices' element={<BlackScholesPrices />} />

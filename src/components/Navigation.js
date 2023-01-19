@@ -20,6 +20,11 @@ function Navigation(props) {
 		iv: 'Implied Volatility',
 	};
 
+	const ovTabs = {
+		ovCustom: 'Options Visualizer',
+		ovStock: 'Spread Types',
+	};
+
 	return (
 		<Navbar collapseOnSelect expand='sm'>
 			<Container>
@@ -35,9 +40,14 @@ function Navigation(props) {
 						<Nav.Link className='linkHover' onClick={() => navigate('/forwards-futures')}>
 							{tabs.ff}
 						</Nav.Link>
-						<Nav.Link className='linkHover' onClick={() => navigate('/options-visualizer')}>
-							{tabs.ov}
-						</Nav.Link>
+						<NavDropdown title={tabs.ov}>
+							<NavDropdown.Item className='linkHover'>
+								<Nav.Link onClick={() => navigate('/options-visualizer')}>{ovTabs.ovCustom}</Nav.Link>
+							</NavDropdown.Item>
+							<NavDropdown.Item className='linkHover'>
+								<Nav.Link onClick={() => navigate('/spreads-viewer')}>{ovTabs.ovStock}</Nav.Link>
+							</NavDropdown.Item>
+						</NavDropdown>
 						<Nav.Link className='linkHover' onClick={() => navigate('/binomial-model')}>
 							{tabs.bm}
 						</Nav.Link>

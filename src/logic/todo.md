@@ -2,6 +2,8 @@
 
 **if stuff breaks, delete the type: module in package json**
 
+fintools: make options visualizer position [s/l] and flavor [c/p] into radio buttons instead of drop downs
+
 ## General
 
 SEPARATE FIREBASE PROJ \
@@ -40,6 +42,12 @@ NAV FOR SINGLE AND MULTI \
 split single step and multi step bin models into two tabs
 add dropdowns to menubar for single and multistep bin model
 
+REFACTOR
+
+EURO V AMERICAN
+allow for american v eruo in bin model
+i could make a watch face that changes based on time of day programmatically
+like it would be one face but depending on time of day would show different things 
 
 ## Black Scholes
 

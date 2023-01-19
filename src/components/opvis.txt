@@ -1,0 +1,298 @@
+<Row>
+						{/* <Col>
+							<Form.Label className='fw-bold'>{optionName1}</Form.Label>
+							<InputGroup>
+								<Button variant='outline-danger'>{qty1 > 0 ? 'Update' : 'Add'}</Button>
+								<Form.Control placeholder='Option Name' on/>
+							</InputGroup>
+						</Col> */}
+						<Col>
+							<Form.Label>Quantity</Form.Label>
+							<InputGroup>
+								<InputGroup.Text>#</InputGroup.Text>
+								<Form.Control id='strikePrice' placeholder={qty1} onChange={(event) => setQty1(event.target.value)} />
+							</InputGroup>
+						</Col>
+						<Col>
+							<Form.Label>Position</Form.Label>
+							<Form.Select placeholder={position1} onChange={(event) => setPosition1(event.target.value)}>
+								<option>{positions.Long}</option>
+								<option>{positions.Short}</option>
+							</Form.Select>
+						</Col>
+						<Col>
+							<Form.Label>Flavor</Form.Label>
+							<Form.Select placeholder={flavor1} onChange={(event) => setFlavor1(event.target.value)}>
+								<option>{flavors.Call}</option>
+								<option>{flavors.Put}</option>
+							</Form.Select>
+						</Col>
+						<Col>
+							<Form.Label>Strike Price</Form.Label>
+							<InputGroup>
+								<InputGroup.Text>$</InputGroup.Text>
+								<Form.Control id='strikePrice' placeholder={strikePrice1} onChange={(event) => setStrikePrice1(event.target.value)} />
+							</InputGroup>
+						</Col>
+						<Col>
+							<Form.Label>Option Price</Form.Label>
+							<InputGroup>
+								<InputGroup.Text>$</InputGroup.Text>
+								<Form.Control id='optionPrice' placeholder={optionPrice1} onChange={(event) => setOptionPrice1(event.target.value)} />
+							</InputGroup>
+						</Col>
+					</Row>
+
+					<Row>
+						<Col>
+							<Form.Label>Quantity</Form.Label>
+							<InputGroup>
+								<InputGroup.Text>#</InputGroup.Text>
+								<Form.Control id='strikePrice' placeholder={qty2} onChange={(event) => setQty2(event.target.value)} />
+							</InputGroup>
+						</Col>
+						<Col>
+							<Form.Label>Position</Form.Label>
+							<Form.Select placeholder={position2} onChange={(event) => setPosition2(event.target.value)}>
+								<option>{positions.Long}</option>
+								<option>{positions.Short}</option>
+							</Form.Select>
+						</Col>
+						<Col>
+							<Form.Label>Flavor</Form.Label>
+							<Form.Select placeholder={flavor2} onChange={(event) => setFlavor2(event.target.value)}>
+								<option>{flavors.Call}</option>
+								<option>{flavors.Put}</option>
+							</Form.Select>
+						</Col>
+						<Col>
+							<Form.Label>Strike Price</Form.Label>
+							<InputGroup>
+								<InputGroup.Text>$</InputGroup.Text>
+								<Form.Control id='strikePrice' placeholder={strikePrice2} onChange={(event) => setStrikePrice2(event.target.value)} />
+							</InputGroup>
+						</Col>
+						<Col>
+							<Form.Label>Option Price</Form.Label>
+							<InputGroup>
+								<InputGroup.Text>$</InputGroup.Text>
+								<Form.Control id='optionPrice' placeholder={optionPrice2} onChange={(event) => setOptionPrice2(event.target.value)} />
+							</InputGroup>
+						</Col>
+					</Row>
+
+					<Row>
+						<Col>
+							<Form.Label>Quantity</Form.Label>
+							<InputGroup>
+								<InputGroup.Text>#</InputGroup.Text>
+								<Form.Control id='strikePrice' placeholder={qty3} onChange={(event) => setQty3(event.target.value)} />
+							</InputGroup>
+						</Col>
+						<Col>
+							<Form.Label>Position</Form.Label>
+							<Form.Select placeholder={position3} onChange={(event) => setPosition3(event.target.value)}>
+								<option>{positions.Long}</option>
+								<option>{positions.Short}</option>
+							</Form.Select>
+						</Col>
+						<Col>
+							<Form.Label>Flavor</Form.Label>
+							<Form.Select placeholder={flavor3} onChange={(event) => setFlavor3(event.target.value)}>
+								<option>{flavors.Call}</option>
+								<option>{flavors.Put}</option>
+							</Form.Select>
+						</Col>
+						<Col>
+							<Form.Label>Strike Price</Form.Label>
+							<InputGroup>
+								<InputGroup.Text>$</InputGroup.Text>
+								<Form.Control id='strikePrice' placeholder={strikePrice3} onChange={(event) => setStrikePrice3(event.target.value)} />
+							</InputGroup>
+						</Col>
+						<Col>
+							<Form.Label>Option Price</Form.Label>
+							<InputGroup>
+								<InputGroup.Text>$</InputGroup.Text>
+								<Form.Control id='optionPrice' placeholder={optionPrice3} onChange={(event) => setOptionPrice3(event.target.value)} />
+							</InputGroup>
+						</Col>
+					</Row>
+
+					<Row>
+						<Col>
+							<Form.Label>Quantity</Form.Label>
+							<InputGroup>
+								<InputGroup.Text>#</InputGroup.Text>
+								<Form.Control id='strikePrice' placeholder={qty4} onChange={(event) => setQty4(event.target.value)} />
+							</InputGroup>
+						</Col>
+						<Col>
+							<Form.Label>Position</Form.Label>
+							<Form.Select placeholder={position4} onChange={(event) => setPosition4(event.target.value)}>
+								<option>{positions.Long}</option>
+								<option>{positions.Short}</option>
+							</Form.Select>
+						</Col>
+						<Col>
+							<Form.Label>Flavor</Form.Label>
+							<Form.Select placeholder={flavor4} onChange={(event) => setFlavor4(event.target.value)}>
+								<option>{flavors.Call}</option>
+								<option>{flavors.Put}</option>
+							</Form.Select>
+						</Col>
+						<Col>
+							<Form.Label>Strike Price</Form.Label>
+							<InputGroup>
+								<InputGroup.Text>$</InputGroup.Text>
+								<Form.Control id='strikePrice' placeholder={strikePrice4} onChange={(event) => setStrikePrice4(event.target.value)} />
+							</InputGroup>
+						</Col>
+						<Col>
+							<Form.Label>Option Price</Form.Label>
+							<InputGroup>
+								<InputGroup.Text>$</InputGroup.Text>
+								<Form.Control id='optionPrice' placeholder={optionPrice4} onChange={(event) => setOptionPrice4(event.target.value)} />
+							</InputGroup>
+						</Col>
+					</Row>
+				</Col>
+				<Form.Text muted>Note: Quantities greater than 10,000 cause significnat slow-downs in graph rendering.</Form.Text>
+			</Row>
+			<p></p>
+			<h1>Naked Options</h1>
+			{/* --------------------------------------------------------------------------- 				Static Options
+			------------------------------------------------------------------------------- */}
+			<Row className='h-250'>
+				<Col>
+					<Line data={portfolioPayoffDataArray[inc][1]} options={chartOptions(portfolioPayoffDataArray[inc++][0])}></Line>
+					<Row>
+						<Col>
+							<Form.Label>Strike Price</Form.Label>
+							<InputGroup>
+								<InputGroup.Text>$</InputGroup.Text>
+								<Form.Control id='strikePrice' placeholder={strikePrice_LC} onChange={(event) => set_strikePrice_LC(event.target.value)} />
+							</InputGroup>
+						</Col>
+						<Col>
+							<Form.Label>Option Price</Form.Label>
+							<InputGroup>
+								<InputGroup.Text>$</InputGroup.Text>
+								<Form.Control id='optionPrice' placeholder={optionPrice_LC} onChange={(event) => set_optionPrice_LC(event.target.value)} />
+							</InputGroup>
+						</Col>
+					</Row>
+				</Col>
+				<Col>
+					<Line data={portfolioPayoffDataArray[inc][1]} options={chartOptions(portfolioPayoffDataArray[inc++][0])}></Line>
+					<Row>
+						<Col>
+							<Form.Label>Strike Price</Form.Label>
+							<InputGroup>
+								<InputGroup.Text>$</InputGroup.Text>
+								<Form.Control id='strikePrice' placeholder={strikePrice_LP} onChange={(event) => set_strikePrice_LP(event.target.value)} />
+							</InputGroup>
+						</Col>
+						<Col>
+							<Form.Label>Option Price</Form.Label>
+							<InputGroup>
+								<InputGroup.Text>$</InputGroup.Text>
+								<Form.Control id='optionPrice' placeholder={optionPrice_LP} onChange={(event) => set_optionPrice_LP(event.target.value)} />
+							</InputGroup>
+						</Col>
+					</Row>
+				</Col>
+			</Row>
+			<Row className='h-250'>
+				<Col>
+					<Line data={portfolioPayoffDataArray[inc][1]} options={chartOptions(portfolioPayoffDataArray[inc++][0])}></Line>
+					<Row>
+						<Col>
+							<Form.Label>Strike Price</Form.Label>
+							<InputGroup>
+								<InputGroup.Text>$</InputGroup.Text>
+								<Form.Control id='strikePrice' placeholder={strikePrice_SC} onChange={(event) => set_strikePrice_SC(event.target.value)} />
+							</InputGroup>
+						</Col>
+						<Col>
+							<Form.Label>Option Price</Form.Label>
+							<InputGroup>
+								<InputGroup.Text>$</InputGroup.Text>
+								<Form.Control id='optionPrice' placeholder={optionPrice_SC} onChange={(event) => set_optionPrice_SC(event.target.value)} />
+							</InputGroup>
+						</Col>
+					</Row>
+				</Col>
+				<Col>
+					<Line data={portfolioPayoffDataArray[inc][1]} options={chartOptions(portfolioPayoffDataArray[inc++][0])}></Line>
+					<Row>
+						<Col>
+							<Form.Label>Strike Price</Form.Label>
+							<InputGroup>
+								<InputGroup.Text>$</InputGroup.Text>
+								<Form.Control id='strikePrice' placeholder={strikePrice_SP} onChange={(event) => set_strikePrice_SP(event.target.value)} />
+							</InputGroup>
+						</Col>
+						<Col>
+							<Form.Label>Option Price</Form.Label>
+							<InputGroup>
+								<InputGroup.Text>$</InputGroup.Text>
+								<Form.Control id='optionPrice' placeholder={optionPrice_SP} onChange={(event) => set_optionPrice_SP(event.target.value)} />
+							</InputGroup>
+						</Col>
+					</Row>
+				</Col>
+			</Row>
+			<p></p>
+			<h1>Spreads</h1>
+			<Row className='h-250'>
+				<Col>
+					<Line data={portfolioPayoffDataArray[inc][1]} options={chartOptions(portfolioPayoffDataArray[inc++][0])}></Line>
+				</Col>
+				<Col>
+					<Line data={portfolioPayoffDataArray[inc][1]} options={chartOptions(portfolioPayoffDataArray[inc++][0])}></Line>
+				</Col>
+			</Row>
+			<Row className='h-250'>
+				<Col>
+					<Line data={portfolioPayoffDataArray[inc][1]} options={chartOptions(portfolioPayoffDataArray[inc++][0])}></Line>
+				</Col>
+				<Col>
+					<Line data={portfolioPayoffDataArray[inc][1]} options={chartOptions(portfolioPayoffDataArray[inc++][0])}></Line>
+				</Col>
+			</Row>
+			<Row className='h-250'>
+				<Col>
+					<Line data={portfolioPayoffDataArray[inc][1]} options={chartOptions(portfolioPayoffDataArray[inc++][0])}></Line>
+				</Col>
+				<Col>
+					<Line data={portfolioPayoffDataArray[inc][1]} options={chartOptions(portfolioPayoffDataArray[inc++][0])}></Line>
+				</Col>
+			</Row>
+			<Row className='h-250'>
+				<Col>
+					<Line data={portfolioPayoffDataArray[inc][1]} options={chartOptions(portfolioPayoffDataArray[inc++][0])}></Line>
+				</Col>
+				<Col>
+					<Line data={portfolioPayoffDataArray[inc][1]} options={chartOptions(portfolioPayoffDataArray[inc++][0])}></Line>
+				</Col>
+			</Row>
+			<Row className='h-250'>
+				<Col>
+					<Line data={portfolioPayoffDataArray[inc][1]} options={chartOptions(portfolioPayoffDataArray[inc++][0])}></Line>
+				</Col>
+				<Col>
+					<Line data={portfolioPayoffDataArray[inc][1]} options={chartOptions(portfolioPayoffDataArray[inc++][0])}></Line>
+				</Col>
+			</Row>
+			<Row className='h-250'>
+				<Col>
+					<Line data={portfolioPayoffDataArray[inc][1]} options={chartOptions(portfolioPayoffDataArray[inc++][0])}></Line>
+				</Col>
+				<Col></Col>
+			</Row>
+			{/* <Row>
+				<p className='footer'>
+					Made by <a href='https://allyrilling.com'>Ally Rilling</a>.
+				</p>
+			</Row> */}
