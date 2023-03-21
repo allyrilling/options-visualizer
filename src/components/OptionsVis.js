@@ -6,44 +6,11 @@ import { Chart, Line } from 'react-chartjs-2';
 import { Chart as ChartJS, LineController, LineElement, PointElement, LinearScale, Title, CategoryScale, Tooltip, Filler } from 'chart.js';
 import Option from '../logic/Option.js';
 import * as ovl from '../logic/OptionVisLib.js';
+import OVInput from './OVInput.js';
 
 ChartJS.register(LineController, LineElement, PointElement, LinearScale, CategoryScale, Title, Tooltip, Filler);
 
 export default function CreateChart() {
-	let inc = 0;
-
-	const chartOptions = (textName) => {
-		return {
-			plugins: {
-				title: {
-					display: true,
-					text: textName,
-					font: { size: 30 },
-				},
-				legend: {
-					display: false,
-				},
-				tooltip: {
-					enabled: true,
-				},
-			},
-			scales: {
-				y: {
-					title: {
-						display: true,
-						text: 'Payoff',
-					},
-				},
-				x: {
-					title: {
-						display: true,
-						text: 'Spot Price',
-					},
-				},
-			},
-		};
-	};
-
 	// x vals
 	let spotPrices = (options) => {
 		let list = [];
@@ -60,76 +27,15 @@ export default function CreateChart() {
 		return list;
 	};
 
-	let portfolioPayoffDataArray = [];
-
-	//-------------------------------------------------------------------------------
-	// PUT CALL STATE CODE
-	//-------------------------------------------------------------------------------
-
-	const [strikePrice_LC, set_strikePrice_LC] = useState(100);
-	const [optionPrice_LC, set_optionPrice_LC] = useState(10);
-	const [strikePrice_LP, set_strikePrice_LP] = useState(100);
-	const [optionPrice_LP, set_optionPrice_LP] = useState(10);
-	const [strikePrice_SC, set_strikePrice_SC] = useState(100);
-	const [optionPrice_SC, set_optionPrice_SC] = useState(10);
-	const [strikePrice_SP, set_strikePrice_SP] = useState(100);
-	const [optionPrice_SP, set_optionPrice_SP] = useState(10);
-
-	let spreads = {
-		'Long Call': [new Option(ovl.flavors.Call, ovl.positions.Long, parseFloat(strikePrice_LC), parseFloat(optionPrice_LC))],
-		'Long Put': [new Option(ovl.flavors.Put, ovl.positions.Long, parseFloat(strikePrice_LP), parseFloat(optionPrice_LP))],
-		'Short Call': [new Option(ovl.flavors.Call, ovl.positions.Short, parseFloat(strikePrice_SC), parseFloat(optionPrice_SC))],
-		'Short Put': [new Option(ovl.flavors.Put, ovl.positions.Short, parseFloat(strikePrice_SP), parseFloat(optionPrice_SP))],
-		'Bull Spread': [new Option(ovl.flavors.Call, ovl.positions.Long, 90, 5), new Option(ovl.flavors.Call, ovl.positions.Short, 110, 2)],
-		'Bear Spread': [new Option(ovl.flavors.Put, ovl.positions.Long, 110, 5), new Option(ovl.flavors.Put, ovl.positions.Short, 90, 2)],
-		'Butterfly Spread': [
-			new Option(ovl.flavors.Call, ovl.positions.Long, 80, 10),
-			new Option(ovl.flavors.Call, ovl.positions.Short, 100, 5),
-			new Option(ovl.flavors.Call, ovl.positions.Short, 100, 5),
-			new Option(ovl.flavors.Call, ovl.positions.Long, 120, 2),
-		],
-		'Ratio Spread': [
-			new Option(ovl.flavors.Call, ovl.positions.Long, 100, 10),
-			new Option(ovl.flavors.Call, ovl.positions.Short, 150, 1),
-			new Option(ovl.flavors.Call, ovl.positions.Short, 150, 1),
-			new Option(ovl.flavors.Call, ovl.positions.Short, 150, 1),
-			new Option(ovl.flavors.Call, ovl.positions.Short, 150, 1),
-			new Option(ovl.flavors.Call, ovl.positions.Short, 150, 1),
-			new Option(ovl.flavors.Call, ovl.positions.Short, 150, 1),
-			new Option(ovl.flavors.Call, ovl.positions.Short, 150, 1),
-			new Option(ovl.flavors.Call, ovl.positions.Short, 150, 1),
-			new Option(ovl.flavors.Call, ovl.positions.Short, 150, 1),
-			new Option(ovl.flavors.Call, ovl.positions.Short, 150, 1),
-		],
-		Straddle: [new Option(ovl.flavors.Put, ovl.positions.Long, 100, 10), new Option(ovl.flavors.Call, ovl.positions.Long, 100, 10)],
-		Strangle: [new Option(ovl.flavors.Put, ovl.positions.Long, 90, 10), new Option(ovl.flavors.Call, ovl.positions.Long, 110, 10)],
-		Strip: [
-			new Option(ovl.flavors.Call, ovl.positions.Long, 100, 20),
-			new Option(ovl.flavors.Put, ovl.positions.Long, 100, 20),
-			new Option(ovl.flavors.Put, ovl.positions.Long, 100, 20),
-		],
-		Strap: [
-			new Option(ovl.flavors.Put, ovl.positions.Long, 100, 20),
-			new Option(ovl.flavors.Call, ovl.positions.Long, 100, 20),
-			new Option(ovl.flavors.Call, ovl.positions.Long, 100, 20),
-		],
-		'Synthetic Long Forward': [new Option(ovl.flavors.Put, ovl.positions.Short, 100, 5), new Option(ovl.flavors.Call, ovl.positions.Long, 100, 5)],
-		'Synthetic Short Forward': [new Option(ovl.flavors.Put, ovl.positions.Long, 100, 5), new Option(ovl.flavors.Call, ovl.positions.Short, 100, 5)],
-		'Box Spread': [
-			new Option(ovl.flavors.Put, ovl.positions.Long, 120, 5),
-			new Option(ovl.flavors.Call, ovl.positions.Short, 120, 5),
-			new Option(ovl.flavors.Put, ovl.positions.Short, 100, 5),
-			new Option(ovl.flavors.Call, ovl.positions.Long, 100, 5),
-		],
+	let callback = function (setQty, setPos, setFlav, setK, setOP) {
+		return (q, pos, flav, k, op) => {
+			setQty(q);
+			setPos(pos);
+			setFlav(flav);
+			setK(k);
+			setOP(op);
+		};
 	};
-
-	Object.entries(spreads).forEach(([key, value]) => {
-		portfolioPayoffDataArray.push([key, ovl.createChartData(key, value, spotPrices)]);
-	});
-
-	//-------------------------------------------------------------------------------
-	// CUSTOM SPREAD STATE CODE
-	//-------------------------------------------------------------------------------
 
 	const [qty1, setQty1] = useState(1);
 	const [position1, setPosition1] = useState(ovl.positions.Long);
@@ -137,11 +43,25 @@ export default function CreateChart() {
 	const [strikePrice1, setStrikePrice1] = useState(100);
 	const [optionPrice1, setOptionPrice1] = useState(10);
 
+	// let callback1 = function (q, p, f, k, op) {
+	// 	setQty1(q);
+	// 	setPosition1(p);
+	// 	setFlavor1(f);
+	// 	setStrikePrice1(k);
+	// 	setOptionPrice1(op);
+	// };
+
+	// todo no idea why this doesnt work, it isnt passing the reference to these functions to the child
+
+	let callback1 = callback(setQty1, setFlavor1, setPosition1, setStrikePrice1, setOptionPrice1);
+
 	const [qty2, setQty2] = useState(0);
 	const [position2, setPosition2] = useState(ovl.positions.Long);
 	const [flavor2, setFlavor2] = useState(ovl.flavors.Call);
 	const [strikePrice2, setStrikePrice2] = useState(0);
 	const [optionPrice2, setOptionPrice2] = useState(0);
+
+	let callback2 = callback(setQty2, setFlavor2, setPosition2, setStrikePrice2, setOptionPrice2);
 
 	const [qty3, setQty3] = useState(0);
 	const [position3, setPosition3] = useState(ovl.positions.Long);
@@ -149,11 +69,15 @@ export default function CreateChart() {
 	const [strikePrice3, setStrikePrice3] = useState(0);
 	const [optionPrice3, setOptionPrice3] = useState(0);
 
+	let callback3 = callback(setQty3, setFlavor3, setPosition3, setStrikePrice3, setOptionPrice3);
+
 	const [qty4, setQty4] = useState(0);
 	const [position4, setPosition4] = useState(ovl.positions.Long);
 	const [flavor4, setFlavor4] = useState(ovl.flavors.Call);
 	const [strikePrice4, setStrikePrice4] = useState(0);
 	const [optionPrice4, setOptionPrice4] = useState(0);
+
+	let callback4 = callback(setQty4, setFlavor4, setPosition4, setStrikePrice4, setOptionPrice4);
 
 	let customSpread = [
 		new Option(flavor1, position1, parseFloat(strikePrice1), parseFloat(optionPrice1)),
@@ -168,34 +92,23 @@ export default function CreateChart() {
 		<Container>
 			<p></p>
 			<h1>Options Visualizer</h1>
-			{/* --------------------------------------------------------------------------- 				Custom Spread
-			------------------------------------------------------------------------------- */}
 			<Row className='h-250'>
 				<Col>
-					{/* <div>
-						<canvas id='acquisitions'></canvas>
-					</div>
-					<script type='module' src='./acquisitions.js'></script> */}
+					<Line data={customPortfolioChartData} options={ovl.chartOptions('Custom Spread')} />
+					<OVInput q={qty1} pos={position1} flav={flavor1} k={strikePrice1} op={optionPrice1} callback={callback1}></OVInput>
+					<OVInput q={qty2} pos={position2} flav={flavor2} k={strikePrice2} op={optionPrice2} callback={callback2}></OVInput>
+					<OVInput q={qty3} pos={position3} flav={flavor3} k={strikePrice3} op={optionPrice3} callback={callback3}></OVInput>
+					<OVInput q={qty4} pos={position4} flav={flavor4} k={strikePrice4} op={optionPrice4} callback={callback4}></OVInput>
 				</Col>
+				<Form.Text muted>Note: Quantities greater than 10,000 cause significant slow-downs in graph rendering.</Form.Text>
 			</Row>
+		</Container>
+	);
+}
 
-			<Row className='h-250'>
-				<Col>
-					{/* <canvas id='acquisitions'></canvas>
-					{(function () {
-						let ctx = document.getElementById('acquisitions');
-						if (ctx && newChartChanges) {
-							new Chart(ctx, {
-								type: 'line',
-								options: chartOptions('Custom Spread'),
-								data: customPortfolioChartData,
-							});
-							setNewChartChanges(false);
-						}
-					})()} */}
-					{/* <Line data={customPortfolioChartData} options={chartOptions} /> */}
-					<Line data={customPortfolioChartData} options={chartOptions('Custom Spread')} />
-					<Row>
+/*
+
+<Row>
 						<Col>
 							<Form.Label>Quantity</Form.Label>
 							<InputGroup>
@@ -343,9 +256,5 @@ export default function CreateChart() {
 							</InputGroup>
 						</Col>
 					</Row>
-				</Col>
-				<Form.Text muted>Note: Quantities greater than 10,000 cause significant slow-downs in graph rendering.</Form.Text>
-			</Row>
-		</Container>
-	);
-}
+
+*/

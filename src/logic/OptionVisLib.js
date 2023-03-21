@@ -42,16 +42,18 @@ export function determineHighestStrike(options) {
 }
 
 export function portfolioPayoff(options, spotPrices) {
-	let pp = []; // pp at each spot price
-	let spots = spotPrices(options);
-	for (let s = 0; s < spots.length; s++) {
-		let ppAtS = 0;
-		for (let o = 0; o < options.length; o++) {
-			ppAtS += netPayoff(options[o], spots[s]);
+	if (spotPrices) {
+		let pp = []; // pp at each spot price
+		let spots = spotPrices(options);
+		for (let s = 0; s < spots.length; s++) {
+			let ppAtS = 0;
+			for (let o = 0; o < options.length; o++) {
+				ppAtS += netPayoff(options[o], spots[s]);
+			}
+			pp.push(ppAtS);
 		}
-		pp.push(ppAtS);
+		return pp;
 	}
-	return pp;
 }
 
 export function createChartData(spreadName, spread, quantities, spotPrices) {
@@ -83,3 +85,35 @@ export function createChartData(spreadName, spread, quantities, spotPrices) {
 		};
 	}
 }
+
+export const chartOptions = (textName) => {
+	return {
+		plugins: {
+			title: {
+				display: true,
+				text: textName,
+				font: { size: 30 },
+			},
+			legend: {
+				display: false,
+			},
+			tooltip: {
+				enabled: true,
+			},
+		},
+		scales: {
+			y: {
+				title: {
+					display: true,
+					text: 'Payoff',
+				},
+			},
+			x: {
+				title: {
+					display: true,
+					text: 'Spot Price',
+				},
+			},
+		},
+	};
+};

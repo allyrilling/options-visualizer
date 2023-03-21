@@ -40,14 +40,15 @@ function Navigation(props) {
 						<Nav.Link className='linkHover' onClick={() => navigate('/forwards-futures')}>
 							{tabs.ff}
 						</Nav.Link>
-						<NavDropdown title={tabs.ov}>
+						<Nav.Link onClick={() => navigate('/options-visualizer')}>{ovTabs.ovCustom}</Nav.Link>
+						{/* <NavDropdown title={tabs.ov}>
 							<NavDropdown.Item className='linkHover'>
 								<Nav.Link onClick={() => navigate('/options-visualizer')}>{ovTabs.ovCustom}</Nav.Link>
 							</NavDropdown.Item>
 							<NavDropdown.Item className='linkHover'>
 								<Nav.Link onClick={() => navigate('/spreads-viewer')}>{ovTabs.ovStock}</Nav.Link>
 							</NavDropdown.Item>
-						</NavDropdown>
+						</NavDropdown> */}
 						<Nav.Link className='linkHover' onClick={() => navigate('/binomial-model')}>
 							{tabs.bm}
 						</Nav.Link>
